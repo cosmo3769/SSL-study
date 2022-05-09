@@ -10,9 +10,9 @@
 
 # Dataset
 
-[INFO] about the dataset with citation. 
+[INFO](https://github.com/cvl-umass/semi-inat-2020) about the dataset.
 
-We have logged the entire dataset as W&B Artifacts for building easy data pipeline for our study. This also enabled us to use download the dataset on any machine easily. Here's the Kaggle kernel used to log them as W&B Artifacts: [Save the Dataset as W&B Artifacts](https://www.kaggle.com/code/ayuraj/save-the-dataset-as-w-b-artifacts/notebook).
+We have logged the entire dataset as W&B Artifacts for building easy data pipeline for our study. This also enabled us to download the dataset on any machine easily. Here's the Kaggle kernel used to log them as W&B Artifacts: [Save the Dataset as W&B Artifacts](https://www.kaggle.com/code/ayuraj/save-the-dataset-as-w-b-artifacts/notebook).
 
 [Add chart of the dataset with associated W&B Tables view]
 
