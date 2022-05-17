@@ -1,8 +1,27 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import wandb
+import string
+import random
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def get_random_id():
+    random_id = id_generator(size=8)
+    configs.exp_id = random_id
+    return configs.exp_id
 
 # Sanity Check
 class ShowBatch():
+    '''
+    Script to show image batch in dataset
+
+    Example usage: 
+        show_batch = ShowBatch(configs)
+        sample_imgs, sample_labels = next(iter(validloader))
+        show_batch.show_batch(sample_imgs, sample_labels)
+    '''
     def __init__(self, args):
         self.args = args
         
@@ -18,7 +37,3 @@ class ShowBatch():
             if label_batch is not None:
                 plt.title(self.get_label(label_batch[n].numpy()))
             plt.axis('off')
-            
-show_batch = ShowBatch(configs)
-sample_imgs, sample_labels = next(iter(validloader))
-show_batch.show_batch(sample_imgs, sample_labels)

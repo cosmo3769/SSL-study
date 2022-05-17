@@ -21,14 +21,13 @@ configs = Namespace(
     resume = False,
     optimizer = 'SGD',
     loss = 'categorical_crossentropy',
+    reg = 0.0001,
 
     # MODEL
     model_save_path = 'models',
     model_type = 'resnet50', # 'resnet50'
+    num_labels = 200
 )
-
-configs.num_labels = len(train_df.label.unique())
-print('Number of labels: ', configs.num_labels)
 
 def get_config():
     return configs

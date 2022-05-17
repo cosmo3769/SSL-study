@@ -18,7 +18,3 @@ class GetCallbacks():
         )
 
         return reduce_lr_on_plateau
-
-def callbacks():
-    callbacks = GetCallbacks(configs)
-    return callbacks

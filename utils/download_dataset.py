@@ -11,7 +11,7 @@ def download_dataset(dataset_name: str, dataset_type: str, version: str='latest'
     with path to the dataset and associated label.
 
     Args:
-        dataset_name (str): The name of the dataset - `train`, `val`, `out-class`, and `in-class`.
+        dataset_name (str): The name of the dataset - `train`, `val`, `test`, `out-class`, and `in-class`.
         dataset_type (str): The type of the dataset - `labelled-dataset`, `unlabelled-dataset`.
         version (str): The version of the dataset to be downloaded. By default it's `latest`,
             but you can provide different version as `vX`, where, X can be 0,1,...
@@ -19,6 +19,7 @@ def download_dataset(dataset_name: str, dataset_type: str, version: str='latest'
         Note that the following combination of dataset_name and dataset_type are valid:
             - `train`, `labelled-dataset`
             - `val`, `labelled-dataset`
+            - `test`, `labelled-dataset`
             - `in-class`, `unlabelled-dataset`
             - `out-class`, `unlabelled-dataset`
 
@@ -66,7 +67,3 @@ def download_dataset(dataset_name: str, dataset_type: str, version: str='latest'
         data_df[['label']] = data_df[['label']].apply(pd.to_numeric)
 
     return data_df
-
-train_df = download_dataset('train', 'labelled-dataset')
-valid_df = download_dataset('val', 'labelled-dataset')
-test_df = download_dataset('test', 'labelled-dataset')
