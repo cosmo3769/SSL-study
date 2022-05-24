@@ -20,15 +20,18 @@ class GetDataloader():
         # Consume dataframe
         dataloader = tf.data.Dataset.from_tensor_slices((paths, labels))
 
-        # Shuffle if its for training
-        if dataloader_type=='train':
-            dataloader = dataloader.shuffle(self.args.dataset_config.batch_size)
-
         # Load the image
         dataloader = (
             dataloader
             .map(partial(self.parse_data, dataloader_type=dataloader_type), num_parallel_calls=AUTOTUNE)
         )
+
+        if self.args.dataset_config.do_cache:
+            dataloader = dataloader.cache()
+
+        # Shuffle if its for training
+        if dataloader_type=='train':
+            dataloader = dataloader.shuffle(self.args.dataset_config.batch_size)
 
         # Add general stuff
         dataloader = (
@@ -67,7 +70,7 @@ class GetDataloader():
                     depth=self.args.dataset_config.num_classes,
                     dtype=tf.float32)
             return image, label
-        elif data_type == 'test':
+        elif dataloader_type == 'test':
             return image
         else:
             raise NotImplementedError("Not implemented for this data_type")

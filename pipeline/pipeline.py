@@ -8,7 +8,7 @@ import tensorflow as tf
 
 
 class SupervisedPipeline():
-    def __init__(self, model, callbacks, args):
+    def __init__(self, model, args, callbacks=[]):
         self.args = args
         self.model = model
         self.callbacks = callbacks
@@ -35,11 +35,12 @@ class SupervisedPipeline():
 
         # Evaluate
         val_eval_loss, val_top_1_acc, val_top_5_acc = self.model.evaluate(validloader)
-        wandb.log({
-            'val_eval_loss': val_eval_loss,
-            'val_top@1': val_top_1_acc,
-            'val_top@5': val_top_5_acc
-        })
+        if wandb.run is not None:
+            wandb.log({
+                'val_eval_loss': val_eval_loss,
+                'val_top@1': val_top_1_acc,
+                'val_top@5': val_top_5_acc
+            })
 
     def test(self, testloader):
         '''Test Prediction'''
@@ -48,6 +49,7 @@ class SupervisedPipeline():
         # TODO: Fix this
         test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(pred, axis = 1))
 
-        wandb.log({
-            'test_accuracy': test_accuracy
-        })
+        if wandb.run is not None:
+            wandb.log({
+                'test_accuracy': test_accuracy
+            })

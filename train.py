@@ -9,7 +9,6 @@ from wandb.keras import WandbCallback
 from ml_collections.config_flags import config_flags
 
 # Import modules
-from configs import get_config
 from data import download_dataset, preprocess_dataset, GetDataloader
 from models import SimpleSupervisedModel
 from callbacks import GetCallbacks
@@ -38,8 +37,6 @@ def main(_):
         train_paths, train_labels = preprocess_dataset(train_df)
         valid_paths, valid_labels = preprocess_dataset(valid_df)
 
-        print(train_labels[:5], valid_labels[:5])
-
         # Build dataloaders
         dataset = GetDataloader(FLAGS.configs)
         trainloader = dataset.dataloader(train_paths, train_labels, dataloader_type='train')
@@ -48,6 +45,7 @@ def main(_):
         # Build the model
         tf.keras.backend.clear_session()
         model = SimpleSupervisedModel(FLAGS.configs).get_model()
+        model.summary()
 
         # Build callbacks
         callbacks = [WandbCallback()]

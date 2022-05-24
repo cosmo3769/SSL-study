@@ -18,16 +18,17 @@ def get_dataset_configs() -> ml_collections.ConfigDict:
     configs.batch_size = 64
     configs.num_classes = 200
     configs.apply_one_hot = True
+    configs.do_cache = True
 
     return configs
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.backbone = "resnet50"
-    configs.learning_rate = 0.0045
-    configs.epochs = 2
+    configs.learning_rate = 0.001
+    configs.epochs = 20
     configs.use_pretrained_weights = True
-    configs.regularize_backbone = True
+    configs.regularize_backbone = False
     configs.l2_regularizer = 0.001
     configs.post_gap_dropout = True
     configs.dropout_rate = 0.5
@@ -44,7 +45,7 @@ def get_train_configs() -> ml_collections.ConfigDict:
 
 def get_config() -> ml_collections.ConfigDict:
     config = ml_collections.ConfigDict()
-    config.seed = 42
+    config.seed = 0
     config.wandb_config = get_wandb_configs()
     config.dataset_config = get_dataset_configs()
     config.train_config = get_train_configs()
