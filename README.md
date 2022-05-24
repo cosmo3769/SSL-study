@@ -16,6 +16,19 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 [Add chart of the dataset with associated W&B Tables view]
 
+# Usage
+
+### Installations
+
+* Install Weights and Biases: `pip install wandb`
+* Install ML Collections: `pip install ml-collection`
+
+### Supervised Pipeline
+
+To train the supervised pipeline that trains a baseline image classifier using labeled training dataset:
+
+`python train.py --configs configs/config.py` 
+
 # Citations
 
 ```
