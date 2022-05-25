@@ -16,6 +16,22 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 [Add chart of the dataset with associated W&B Tables view]
 
+# Usage
+
+### Installations
+
+* Run: `pip install -r requirements.txt`
+
+### Wandb Authorization
+
+* Run: `bash ./utils/utils.sh`
+
+### Supervised Pipeline
+
+To train the supervised pipeline that trains a baseline image classifier using labeled training dataset:
+
+`python train.py --configs configs/config.py` 
+
 # Citations
 
 ```
