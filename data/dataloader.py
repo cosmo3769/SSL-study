@@ -63,12 +63,12 @@ class GetDataloader():
 
         if dataloader_type in ['train', 'valid']:
             # Parse Target
-            label = tf.cast(label, dtype=tf.int32)
+            label = tf.cast(label, dtype=tf.int64)
             if self.args.dataset_config.apply_one_hot:
                 label = tf.one_hot(
                     label,
-                    depth=self.args.dataset_config.num_classes,
-                    dtype=tf.float32)
+                    depth=self.args.dataset_config.num_classes
+                    )
             return image, label
         elif dataloader_type == 'test':
             return image

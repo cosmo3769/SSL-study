@@ -51,7 +51,7 @@ def main(_):
         callbacks = [WandbCallback()]
 
         # Build the pipeline
-        pipeline = SupervisedPipeline(model, callbacks, FLAGS.configs)
+        pipeline = SupervisedPipeline(model, FLAGS.configs, callbacks)
 
         # Train and Evaluate
         pipeline.train_and_evaluate(trainloader, validloader)

@@ -25,14 +25,14 @@ def get_dataset_configs() -> ml_collections.ConfigDict:
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.backbone = "resnet50"
-    configs.learning_rate = 0.001
-    configs.epochs = 20
+    configs.learning_rate = 0.0045
+    configs.epochs = 10
     configs.use_pretrained_weights = True
-    configs.regularize_backbone = False
-    configs.l2_regularizer = 0.001
+    configs.regularize_backbone = True
+    configs.l2_regularizer = 0.0001
     configs.post_gap_dropout = True
     configs.dropout_rate = 0.5
-    configs.optimizer = "adam"
+    configs.optimizer = "sgd"
     configs.momentum = 0.9
     configs.loss = "categorical_crossentropy"
     configs.early_patience = 6
