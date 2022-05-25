@@ -20,8 +20,11 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 ### Installations
 
-* Install Weights and Biases: `pip install wandb`
-* Install ML Collections: `pip install ml-collection`
+* Run: `pip install -r requirements.txt`
+
+### Wandb Authorization
+
+* Run: `bash ./utils/utils.sh`
 
 ### Supervised Pipeline
 
