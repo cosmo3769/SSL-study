@@ -86,9 +86,10 @@ class GetDataloader():
     def build_augmentation(self, dataloader_type='train'):
         if dataloader_type=='train':
             transform = Compose([
-                RandomCrop(90, 90, p=0.5),
-                Resize(self.args.augmentation_config.crop_height, 
-                       self.args.augmentation_config.crop_width, p=1),
+                RandomCrop(self.args.augmentation_config.crop_height, 
+                           self.args.augmentation_config.crop_width, p=1)
+                # Resize(self.args.augmentation_config.crop_height, 
+                #        self.args.augmentation_config.crop_width, p=1),
             ])
         else:
             raise NotImplementedError("No augmentation")
@@ -97,8 +98,8 @@ class GetDataloader():
             
     def augmentation(self, image, label):
         aug_img = tf.numpy_function(func=self.aug_fn, inp=[image], Tout=tf.float32)
-        aug_img.set_shape((self.args.augmentation_config.crop_height, 
-                           self.args.augmentation_config.crop_width, 3))
+        aug_img.set_shape((self.args.dataset_config.image_height, 
+                           self.args.dataset_config.image_width, 3))
 
         return aug_img, label
 
