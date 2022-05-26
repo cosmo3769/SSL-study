@@ -1,8 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from functools import partial
-import albumentations
-from albumentations import Compose, RandomCrop, Resize
+from albumentations import Compose, RandomCrop, Resize, RandomResizedCrop
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -86,8 +85,8 @@ class GetDataloader():
     def build_augmentation(self, dataloader_type='train'):
         if dataloader_type=='train':
             transform = Compose([
-                RandomCrop(self.args.augmentation_config.crop_height, 
-                           self.args.augmentation_config.crop_width, p=1)
+                RandomResizedCrop(self.args.augmentation_config.crop_height, 
+                                  self.args.augmentation_config.crop_width, p=1)
                 # Resize(self.args.augmentation_config.crop_height, 
                 #        self.args.augmentation_config.crop_width, p=1),
             ])
