@@ -1,2 +1,3 @@
 wandb
 ml-collections
+albumentations

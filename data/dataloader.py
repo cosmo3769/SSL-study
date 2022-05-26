@@ -1,5 +1,8 @@
+import numpy as np
 import tensorflow as tf
 from functools import partial
+import albumentations
+from albumentations import Compose, RandomCrop, Resize
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -32,6 +35,11 @@ class GetDataloader():
         # Shuffle if its for training
         if dataloader_type=='train':
             dataloader = dataloader.shuffle(self.args.dataset_config.batch_size)
+
+        # Add augmentation to dataloader for training
+        if self.args.train_config.use_augmentations and dataloader_type=='train':
+            self.transform = self.build_augmentation(dataloader_type=dataloader_type)
+            dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
 
         # Add general stuff
         dataloader = (
@@ -74,3 +82,29 @@ class GetDataloader():
             return image
         else:
             raise NotImplementedError("Not implemented for this data_type")
+
+    def build_augmentation(self, dataloader_type='train'):
+        if dataloader_type=='train':
+            transform = Compose([
+                RandomCrop(90, 90, p=0.5),
+                Resize(self.args.augmentation_config.crop_height, 
+                       self.args.augmentation_config.crop_width, p=1),
+            ])
+        else:
+            raise NotImplementedError("No augmentation")
+
+        return transform
+            
+    def augmentation(self, image, label):
+        aug_img = tf.numpy_function(func=self.aug_fn, inp=[image], Tout=tf.float32)
+        aug_img.set_shape((self.args.augmentation_config.crop_height, 
+                           self.args.augmentation_config.crop_width, 3))
+
+        return aug_img, label
+
+    def aug_fn(self, image):
+        data = {"image":image}
+        aug_data = self.transform(**data)
+        aug_img = aug_data["image"]
+
+        return aug_img.astype(np.float32)
