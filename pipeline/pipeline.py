@@ -6,11 +6,11 @@ from sklearn.metrics import accuracy_score
 import wandb
 import tensorflow as tf
 
-
 class SupervisedPipeline():
-    def __init__(self, model, args, callbacks=[]):
+    def __init__(self, model, args, class_weights=None, callbacks=[]):
         self.args = args
         self.model = model
+        self.class_weights = class_weights
         self.callbacks = callbacks
 
     def train_and_evaluate(self, trainloader, validloader):
@@ -29,6 +29,7 @@ class SupervisedPipeline():
                                     tf.keras.metrics.TopKCategoricalAccuracy(5, name='top@5_acc')])
 
         self.model.fit(trainloader,
+                       class_weight= self.class_weights,
                        epochs=self.args.train_config.epochs,
                        validation_data=validloader,
                        callbacks=self.callbacks)

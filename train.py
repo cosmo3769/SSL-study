@@ -4,8 +4,10 @@ import glob
 import wandb
 from absl import app
 from absl import flags
+import numpy as np
 import tensorflow as tf
 from wandb.keras import WandbCallback
+from sklearn.utils import class_weight
 from ml_collections.config_flags import config_flags
 
 # Import modules
@@ -37,6 +39,14 @@ def main(_):
         train_paths, train_labels = preprocess_dataset(train_df)
         valid_paths, valid_labels = preprocess_dataset(valid_df)
 
+        # Compute class weights if use_class_weights is True.
+        class_weights = None
+        if FLAGS.configs.train_config.use_class_weights:
+            class_weights = class_weight.compute_class_weight(class_weight='balanced', 
+                                  classes=np.unique(train_labels), 
+                                  y=train_labels)
+            class_weights = dict(zip(np.unique(train_labels), class_weights))
+
         # Build dataloaders
         dataset = GetDataloader(FLAGS.configs)
         trainloader = dataset.dataloader(train_paths, train_labels, dataloader_type='train')
@@ -51,7 +61,7 @@ def main(_):
         callbacks = [WandbCallback()]
 
         # Build the pipeline
-        pipeline = SupervisedPipeline(model, FLAGS.configs, callbacks)
+        pipeline = SupervisedPipeline(model, FLAGS.configs, class_weights, callbacks)
 
         # Train and Evaluate
         pipeline.train_and_evaluate(trainloader, validloader)
