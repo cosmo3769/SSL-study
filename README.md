@@ -20,7 +20,7 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 ### Installations
 
-* Run: `pip install -r requirements.txt`
+* Run: `pip install --upgrade -r requirements.txt`
 
 ### Wandb Authorization
 
