@@ -22,6 +22,10 @@ class GetDataloader():
         # Consume dataframe
         dataloader = tf.data.Dataset.from_tensor_slices((paths, labels))
 
+        # Shuffle if its for training
+        if dataloader_type=='train':
+            dataloader = dataloader.shuffle(self.args.dataset_config.batch_size)
+
         # Load the image
         dataloader = (
             dataloader
@@ -30,10 +34,6 @@ class GetDataloader():
 
         if self.args.dataset_config.do_cache:
             dataloader = dataloader.cache()
-
-        # Shuffle if its for training
-        if dataloader_type=='train':
-            dataloader = dataloader.shuffle(self.args.dataset_config.batch_size)
 
         # Add augmentation to dataloader for training
         if self.args.train_config.use_augmentations and dataloader_type=='train':
