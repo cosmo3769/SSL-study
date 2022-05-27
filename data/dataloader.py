@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from functools import partial
-from albumentations import Compose, RandomCrop, Resize, RandomResizedCrop, Flip
+import albumentations as A
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -49,24 +49,35 @@ class GetDataloader():
 
         return dataloader
 
-    def decode_image(self, img):
+    def decode_image(self, img, dataloader_type='train'):
         # convert the compressed string to a 3D uint8 tensor
         img = tf.image.decode_jpeg(img, channels=3)
         # Normalize image
         img = tf.image.convert_image_dtype(img, dtype=tf.float32)
         # resize the image to the desired size
-        if self.args.dataset_config.apply_resize:
+        if self.args.dataset_config.apply_resize and dataloader_type=='train':
             img = tf.image.resize(img, 
-                                  [self.args.dataset_config.image_height, self.args.dataset_config.image_width],
-                                  method='bicubic', preserve_aspect_ratio=False)
+                                  [self.args.dataset_config.image_height, 
+                                  self.args.dataset_config.image_width],
+                                  method='bicubic', 
+                                  preserve_aspect_ratio=False)
             img = tf.clip_by_value(img, 0.0, 1.0)
+        elif self.args.dataset_config.apply_resize and dataloader_type=='valid':
+            img = tf.image.resize(img, 
+                                  [self.args.augmentation_config.crop_height, 
+                                  self.args.augmentation_config.crop_width],
+                                  method='bicubic', 
+                                  preserve_aspect_ratio=False)
+            img = tf.clip_by_value(img, 0.0, 1.0)
+        else:
+            raise NotImplementedError("No data type")
 
         return img
 
     def parse_data(self, path, label, dataloader_type='train'):
         # Parse Image
         image = tf.io.read_file(path)
-        image = self.decode_image(image)
+        image = self.decode_image(image, dataloader_type)
 
         if dataloader_type in ['train', 'valid']:
             # Parse Target
@@ -84,10 +95,11 @@ class GetDataloader():
 
     def build_augmentation(self, dataloader_type='train'):
         if dataloader_type=='train':
-            transform = Compose([
-                RandomResizedCrop(self.args.augmentation_config.crop_height, 
-                                  self.args.augmentation_config.crop_width, p=1),
-                Flip(p=0.5)
+            transform = A.Compose([
+                A.RandomResizedCrop(self.args.augmentation_config.crop_height, 
+                                  self.args.augmentation_config.crop_width, 
+                                  p=1),
+                A.Flip(p=0.5)
                 # Resize(self.args.augmentation_config.crop_height, 
                 #        self.args.augmentation_config.crop_width, p=1),
             ])
