@@ -14,8 +14,8 @@ from ml_collections.config_flags import config_flags
 # Import modules
 from data import download_dataset, preprocess_dataset, GetDataloader
 from models import SimpleSupervisedModel
-from callbacks import GetCallbacks
-from pipeline import SupervisedPipeline
+from callbacks import GetCallbacks, CustomLearningRateScheduler
+from pipeline import SupervisedPipeline, GetLRSchedulers
 
 FLAGS = flags.FLAGS
 config_flags.DEFINE_config_file("configs")
@@ -58,10 +58,14 @@ def main(_):
         model = SimpleSupervisedModel(FLAGS.configs).get_model()
         model.summary()
 
+        # Get learning rate schedulers
+        if FLAGS.configs.train_config.use_lr_scheduler:
+            lr_schedulers = GetLRSchedulers(FLAGS.configs)
+
         # Build callbacks
         callback = GetCallbacks(FLAGS.configs)
-        # callbacks = [WandbCallback(), callback.get_earlystopper(), callback.get_reduce_lr_on_plateau()]
-        callbacks = [WandbCallback(save_model=False)]
+        # callbacks = [WandbCallback(save_model=False), CustomLearningRateScheduler(lr_schedulers.get_exponential_decay())]
+        callbacks = [WandbCallback()]
         
         # Build the pipeline
         pipeline = SupervisedPipeline(model, FLAGS.configs, class_weights, callbacks)
