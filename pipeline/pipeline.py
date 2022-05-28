@@ -14,11 +14,20 @@ class SupervisedPipeline():
         self.callbacks = callbacks
 
     def train_and_evaluate(self, trainloader, validloader):
+        decay_steps = 1000
+        lr_decayed_fn = tf.keras.optimizers.schedules.CosineDecay(
+            self.args.train_config.learning_rate, decay_steps)
+        lr_decayed_fn = tf.keras.optimizers.schedules.ExponentialDecay(self.args.train_config.learning_rate,
+                                                                     decay_steps=100000,
+                                                                     decay_rate=0.96,
+                                                                     staircase=True)
+        learning_rate = lr_decayed_fn
+
         # Compile model
         if self.args.train_config.optimizer == 'adam':
-            optimizer = tf.keras.optimizers.Adam(self.args.train_config.learning_rate)
+            optimizer = tf.keras.optimizers.Adam(learning_rate)
         elif self.args.train_config.optimizer == 'sgd':
-            optimizer = tf.keras.optimizers.SGD(self.args.train_config.learning_rate, self.args.train_config.momentum)
+            optimizer = tf.keras.optimizers.SGD(learning_rate, self.args.train_config.momentum)
         else:
             raise NotImplementedError("This optimizer is not implemented.")
 

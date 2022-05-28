@@ -37,9 +37,9 @@ class SimpleSupervisedModel():
 
         # Stack layers
         inputs = tf.keras.layers.Input(
-            (self.args.dataset_config.image_height, 
-             self.args.dataset_config.image_width, 
-             self.args.dataset_config.channels))
+            (self.args.train_config.model_img_height,
+             self.args.train_config.model_img_width,
+             self.args.train_config.model_img_channels))
 
         x = base_model(inputs, training=True)
         x = tf.keras.layers.GlobalAveragePooling2D()(x)

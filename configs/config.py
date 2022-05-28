@@ -11,8 +11,8 @@ def get_wandb_configs() -> ml_collections.ConfigDict:
 
 def get_dataset_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.image_height = 224 #default - 224
-    configs.image_width = 224 #default - 224
+    configs.image_height = 300 #default - 224
+    configs.image_width = 300 #default - 224
     configs.channels = 3
     configs.apply_resize = True
     configs.batch_size = 64
@@ -31,9 +31,12 @@ def get_augmentation_configs() -> ml_collections.ConfigDict:
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
+    configs.model_img_height = 224
+    configs.model_img_width = 224
+    configs.model_img_channels = 3
     configs.backbone = "resnet50"
-    configs.learning_rate = 0.0045
-    configs.epochs = 10
+    configs.learning_rate = 0.001
+    configs.epochs = 50
     configs.use_pretrained_weights = True
     configs.regularize_backbone = True
     configs.l2_regularizer = 0.0001

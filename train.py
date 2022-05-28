@@ -1,5 +1,6 @@
 # General imports
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import glob
 import wandb
 from absl import app
@@ -58,8 +59,10 @@ def main(_):
         model.summary()
 
         # Build callbacks
-        callbacks = [WandbCallback()]
-
+        callback = GetCallbacks(FLAGS.configs)
+        # callbacks = [WandbCallback(), callback.get_earlystopper(), callback.get_reduce_lr_on_plateau()]
+        callbacks = [WandbCallback(save_model=False)]
+        
         # Build the pipeline
         pipeline = SupervisedPipeline(model, FLAGS.configs, class_weights, callbacks)
 
