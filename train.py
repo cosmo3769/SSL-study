@@ -71,7 +71,7 @@ def main(_):
         pipeline = SupervisedPipeline(model, FLAGS.configs, class_weights, callbacks)
 
         # Train and Evaluate
-        pipeline.train_and_evaluate(trainloader, validloader)
+        pipeline.train_and_evaluate(valid_df, trainloader, validloader)
 
 if __name__ == "__main__":
     app.run(main)

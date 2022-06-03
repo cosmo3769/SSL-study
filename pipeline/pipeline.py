@@ -4,6 +4,7 @@ import tempfile
 import numpy as np
 from sklearn.metrics import accuracy_score
 import wandb
+from tqdm import tqdm
 import tensorflow as tf
 
 class SupervisedPipeline():
@@ -13,7 +14,7 @@ class SupervisedPipeline():
         self.class_weights = class_weights
         self.callbacks = callbacks
 
-    def train_and_evaluate(self, trainloader, validloader):
+    def train_and_evaluate(self, valid_df, trainloader, validloader):
         # Compile model
         if self.args.train_config.optimizer == 'adam':
             optimizer = tf.keras.optimizers.Adam(self.args.lr_config.init_lr_rate)
@@ -36,11 +37,23 @@ class SupervisedPipeline():
 
         # Evaluate
         val_eval_loss, val_top_1_acc, val_top_5_acc = self.model.evaluate(validloader)
+
+        validation_table = wandb.Table(columns=["image_id", "image", "true_labels", "evaluated_labels"])
+        evaluation = self.model.predict(validloader)
+        for i, tmp_df in tqdm(valid_df.iterrows()):
+            validation_table.add_data(
+                int(tmp_df.image_id),
+                wandb.Image(tmp_df.image_path),
+                int(tmp_df.label),
+                int(np.argmax(evaluation[i], axis = 0))
+            )
+
         if wandb.run is not None:
             wandb.log({
                 'val_eval_loss': val_eval_loss,
                 'val_top@1': val_top_1_acc,
-                'val_top@5': val_top_5_acc
+                'val_top@5': val_top_5_acc,
+                'val_table': validation_table
             })
 
     def test(self, testloader):
