@@ -20,7 +20,6 @@ from pipeline import SupervisedPipeline, GetLRSchedulers
 FLAGS = flags.FLAGS
 config_flags.DEFINE_config_file("configs")
 
-
 def main(_):
     with wandb.init(
         entity=FLAGS.configs.wandb_config.entity,
