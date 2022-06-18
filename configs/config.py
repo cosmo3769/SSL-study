@@ -35,7 +35,7 @@ def get_train_configs() -> ml_collections.ConfigDict:
     configs.model_img_width = 224
     configs.model_img_channels = 3
     configs.backbone = "resnet50"
-    configs.epochs = 20
+    configs.epochs = 3
     configs.use_pretrained_weights = True
     configs.regularize_backbone = True
     configs.l2_regularizer = 0.0001

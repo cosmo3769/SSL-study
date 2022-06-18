@@ -21,9 +21,9 @@ from configs.sweep_config import sweep_config
 FLAGS = flags.FLAGS
 config_flags.DEFINE_config_file("configs")
 
-def train():
+def main(_):
     # with wandb.init():
-      with wandb.init(config=FLAGS.configs):
+      with wandb.init(config=FLAGS.configs, entity="wandb_fc", project="ssl-study"):
         config = wandb.config
 
         # Seed Everything
@@ -70,9 +70,9 @@ def train():
         # Train and Evaluate
         pipeline.train_and_evaluate(valid_df, trainloader, validloader)
 
-def main(_):
-    sweep_id = wandb.sweep(sweep_config, entity="wandb_fc", project="ssl-study")
-    wandb.agent(sweep_id, train(), count = 10)
+# def main(_):
+#     sweep_id = wandb.sweep(sweep_config, entity="wandb_fc", project="ssl-study")
+#     wandb.agent(sweep_id, train(), count = 10)
 
 if __name__ == "__main__":
     app.run(main)
