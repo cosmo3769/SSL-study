@@ -17,13 +17,20 @@ from models import SimpleSupervisedModel
 from callbacks import GetCallbacks, CustomLearningRateScheduler
 from pipeline import SupervisedPipeline, GetLRSchedulers
 from configs.sweep_config import sweep_config
+from configs.config import get_config
 
-FLAGS = flags.FLAGS
-CONFIG = config_flags.DEFINE_config_file("configs")
+# FLAGS = flags.FLAGS
+# CONFIG = config_flags.DEFINE_config_file("configs")
 
-def main(_):
-    with wandb.init(config=CONFIG.value.to_dict(), entity="wandb_fc", project="ssl-study"):
-      config = wandb.config
+config = get_config()
+
+wandb.init(config=config.to_dict(), entity="wandb_fc", project="ssl-study")
+config = wandb.config
+
+# print(config)
+def train():
+    # with wandb.init(config=CONFIG.value.to_dict(), entity="wandb_fc", project="ssl-study"):
+    #   config = wandb.config
 
       # Seed Everything
       tf.random.set_seed(config.seed)
@@ -69,9 +76,10 @@ def main(_):
       # Train and Evaluate
       pipeline.train_and_evaluate(valid_df, trainloader, validloader)
 
+train()
 # def main(_):
 #     sweep_id = wandb.sweep(sweep_config, entity="wandb_fc", project="ssl-study")
 #     wandb.agent(sweep_id, train(), count = 10)
 
-if __name__ == "__main__":
-    app.run(main)
+# if __name__ == "__main__":
+#     app.run(main)

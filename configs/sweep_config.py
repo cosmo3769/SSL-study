@@ -1,7 +1,6 @@
 import wandb
 
 sweep_config = {
-  "name" : "hyperparam_search",
   "method" : "bayes",
   "metric": {
     "name": "val_eval_loss",

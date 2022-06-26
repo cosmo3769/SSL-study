@@ -1,4 +1,4 @@
-program: sweep_train.py
+program: /content/SSL-study/sweep_train.py
 method: bayes
 metric:
   name: val_eval_loss
