@@ -4,7 +4,7 @@ sweep_config = {
   "name" : "hyperparam_search",
   "method" : "bayes",
   "metric": {
-    "name": "val_loss",
+    "name": "val_eval_loss",
     "goal": "minimize"
   },
   "parameters" : {

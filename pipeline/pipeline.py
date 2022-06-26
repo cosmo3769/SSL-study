@@ -16,22 +16,22 @@ class SupervisedPipeline():
 
     def train_and_evaluate(self, valid_df, trainloader, validloader):
         # Compile model
-        if self.args.train_config.optimizer == 'adam':
-            optimizer = tf.keras.optimizers.Adam(self.args.lr_config.init_lr_rate)
-        elif self.args.train_config.optimizer == 'sgd':
-            optimizer = tf.keras.optimizers.SGD(self.args.lr_config.init_lr_rate, self.args.train_config.sgd_momentum)
+        if self.args.train_config["optimizer"] == 'adam':
+            optimizer = tf.keras.optimizers.Adam(self.args.lr_config["init_lr_rate"])
+        elif self.args.train_config["optimizer"] == 'sgd':
+            optimizer = tf.keras.optimizers.SGD(self.args.lr_config["init_lr_rate"], self.args.train_config["sgd_momentum"])
         else:
             raise NotImplementedError("This optimizer is not implemented.")
 
         # Train
         self.model.compile(optimizer,
-                           loss=self.args.train_config.loss,
+                           loss=self.args.train_config["loss"],
                            metrics=[tf.keras.metrics.TopKCategoricalAccuracy(1, name='top@1_acc'),
                                     tf.keras.metrics.TopKCategoricalAccuracy(5, name='top@5_acc')])
 
         self.model.fit(trainloader,
                        class_weight= self.class_weights,
-                       epochs=self.args.train_config.epochs,
+                       epochs=self.args.train_config["epochs"],
                        validation_data=validloader,
                        callbacks=self.callbacks)
 
