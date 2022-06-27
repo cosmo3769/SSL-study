@@ -18,24 +18,16 @@ from callbacks import GetCallbacks, CustomLearningRateScheduler
 from pipeline import SupervisedPipeline, GetLRSchedulers
 
 FLAGS = flags.FLAGS
-# config_flags.DEFINE_config_file("configs")
 CONFIG = config_flags.DEFINE_config_file("configs")
 
-
 def main(_):
-    # with wandb.init(
-    #     entity=FLAGS.configs.wandb_config.entity,
-    #     project=FLAGS.configs.wandb_config.project,
-    #     job_type='train',
-    #     config=FLAGS.configs.to_dict(),
-    # ):
     with wandb.init(
         entity=CONFIG.value.wandb_config.entity,
         project=CONFIG.value.wandb_config.project,
         job_type='train',
         config=CONFIG.value.to_dict(),
     ):
-        
+        # Access all hyperparameter values through wandb.config
         config = wandb.config
         # Seed Everything
         tf.random.set_seed(config.seed)
