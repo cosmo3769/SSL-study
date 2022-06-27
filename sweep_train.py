@@ -16,18 +16,19 @@ from data import download_dataset, preprocess_dataset, GetDataloader
 from models import SimpleSupervisedModel
 from callbacks import GetCallbacks, CustomLearningRateScheduler
 from pipeline import SupervisedPipeline, GetLRSchedulers
-from configs.sweep_config import sweep_config
 from configs.config import get_config
 
 # Access all hyperparameter values through ml collection config
 config = get_config()
 
 # Initialize wandb
-wandb.init(config=config.to_dict(), entity="wandb_fc", project="ssl-study")
+wandb.init(config=config.to_dict(),
+           entity=config.wandb_config.entity, 
+           project=config.wandb_config.project)
 # Access all hyperparameter values through wandb.config
 config = wandb.config
 
-def train():
+def main():
     # Seed Everything
     tf.random.set_seed(config.seed)
 
@@ -72,4 +73,4 @@ def train():
     # Train and Evaluate
     pipeline.train_and_evaluate(valid_df, trainloader, validloader)
 
-train()
+main()
