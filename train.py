@@ -10,14 +10,13 @@ import tensorflow as tf
 from wandb.keras import WandbCallback
 from sklearn.utils import class_weight
 from ml_collections.config_flags import config_flags
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
 from data import download_dataset, preprocess_dataset, GetDataloader
 from models import SimpleSupervisedModel
-from callbacks import GetCallbacks
-from pipeline import SupervisedPipeline, PolynomialDecay
-
-from tensorflow.keras.callbacks import LearningRateScheduler
+from callbacks import GetCallbacks, PolynomialDecay
+from pipeline import SupervisedPipeline
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("configs")
@@ -65,7 +64,7 @@ def main(_):
             schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
 
         # Build callbacks
-        callback = GetCallbacks(config)
+        # callback = GetCallbacks(config)
         callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
         
         # Build the pipeline

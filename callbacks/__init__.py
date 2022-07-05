@@ -1,5 +1,5 @@
-from .callback import GetCallbacks
+from .callback import GetCallbacks, PolynomialDecay
 
 __name__ = [
-    'GetCallbacks'
+    'GetCallbacks', 'PolynomialDecay'
 ]
