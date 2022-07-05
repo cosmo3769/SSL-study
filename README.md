@@ -20,7 +20,7 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 ### Installations
 
-* Run: `pip install -r requirements.txt`
+* Run: `pip install --upgrade -r requirements.txt`
 
 ### Wandb Authorization
 
@@ -31,6 +31,17 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 To train the supervised pipeline that trains a baseline image classifier using labeled training dataset:
 
 `python train.py --configs configs/config.py` 
+
+### Sweeps
+
+* Run: `python sweep_train.py --configs configs/config.py`
+* Run: `wandb sweep /configs/sweep_config.yaml`
+* Run: `wandb agent entity-name/project-name/sweep-id`
+
+**NOTE**
+
+* Change the `entity-name`, `project-name`, and `sweep-id` according to your `entity-name`, `project-name`, and `sweep-id`. 
+* You will get your sweep-id by running `wandb sweep /configs/sweep_config.yaml` as mentioned above.
 
 # Citations
 
