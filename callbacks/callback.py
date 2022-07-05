@@ -1,35 +1,17 @@
 import tensorflow as tf
 import wandb
 
-from tensorflow.keras.optimizers.schedules import ExponentialDecay
+class PolynomialDecay():
+    def __init__(self, maxEpochs=5, init_lr_rate=0.001, power=1.0):
+        self.maxEpochs = maxEpochs
+        self.init_lr_rate = init_lr_rate
+        self.power = power
 
-class CustomLearningRateScheduler(tf.keras.callbacks.Callback):
-    """Learning rate scheduler which sets the learning rate according to schedule.
+    def __call__(self, epoch):
+        decay = (1 - (epoch/float(self.maxEpochs))) ** self.power
+        lr_rate = self.init_lr_rate * decay
 
-    Arguments:
-        schedule: a function that takes an epoch index
-            (integer, indexed from 0) and current learning rate
-            as inputs and returns a new learning rate as output (float).
-    """
-
-    def __init__(self, schedule):
-        super(CustomLearningRateScheduler, self).__init__()
-        self.schedule = schedule
-
-    def on_train_batch_begin(self, batch, logs=None):
-        if not hasattr(self.model.optimizer, "lr"):
-            raise ValueError('Optimizer must have a "lr" attribute.')
-        # Get the current learning rate from model's optimizer.
-        lr = float(tf.keras.backend.get_value(self.model.optimizer.learning_rate))
-        # Call schedule function to get the scheduled learning rate.
-        if isinstance(self.schedule, ExponentialDecay):
-            scheduled_lr = self.schedule(batch)
-        # Set the value back to the optimizer before this epoch starts
-        tf.keras.backend.set_value(self.model.optimizer.lr, scheduled_lr)
-        # Log the LR to W&B.
-        print(batch, lr, scheduled_lr)
-        if wandb.run is not None:
-            wandb.log({'lr': scheduled_lr})
+        return float(lr_rate)
 
 class GetCallbacks():
     def __init__(self, args):
@@ -51,7 +33,3 @@ class GetCallbacks():
         )
 
         return reduce_lr_on_plateau
-
-    def get_lr_logger(self):
-        lr_logger = LRLogger()
-        return lr_logger

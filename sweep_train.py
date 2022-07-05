@@ -10,12 +10,13 @@ import tensorflow as tf
 from wandb.keras import WandbCallback
 from sklearn.utils import class_weight
 from ml_collections.config_flags import config_flags
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
 from data import download_dataset, preprocess_dataset, GetDataloader
 from models import SimpleSupervisedModel
-from callbacks import GetCallbacks, CustomLearningRateScheduler
-from pipeline import SupervisedPipeline, GetLRSchedulers
+from callbacks import GetCallbacks, PolynomialDecay
+from pipeline import SupervisedPipeline
 from configs.config import get_config
 
 # Access all hyperparameter values through ml collection config
@@ -60,13 +61,12 @@ def main():
 
     # Get learning rate schedulers
     if config.train_config["use_lr_scheduler"]:
-        lr_schedulers = GetLRSchedulers(config)
+        schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
 
     # Build callbacks
-    callback = GetCallbacks(config)
-    # callbacks = [WandbCallback(save_model=False), CustomLearningRateScheduler(lr_schedulers.get_exponential_decay())]
-    callbacks = [WandbCallback()]
-    
+    # callback = GetCallbacks(config)
+    callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
+
     # Build the pipeline
     pipeline = SupervisedPipeline(model, config, class_weights, callbacks)
 

@@ -1,5 +1,5 @@
-from .callback import GetCallbacks, CustomLearningRateScheduler
+from .callback import GetCallbacks, PolynomialDecay
 
 __name__ = [
-    'GetCallbacks', 'CustomLearningRateScheduler'
+    'GetCallbacks', 'PolynomialDecay'
 ]
