@@ -1,3 +1,4 @@
 wandb
 ml-collections
 albumentations
+keras-cv
