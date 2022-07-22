@@ -42,11 +42,6 @@ class GetDataloader():
             self.transform = self.build_augmentation()
             dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
 
-        # if self.args.train_config["use_augmentations"] and dataloader_type=='train':
-        #     dataloader = dataloader.map(self.apply_rand_augment, num_parallel_calls=AUTOTUNE)
-        #     dataloader = dataloader.map(self.cut_mix_and_mix_up, num_parallel_calls=AUTOTUNE)
-        #     dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
-
         # Add general stuff
         dataloader = (
             dataloader
@@ -99,25 +94,6 @@ class GetDataloader():
             return image
         else:
             raise NotImplementedError("Not implemented for this data_type")
-
-
-    # def apply_rand_augment(inputs):
-    #     rand_augment = keras_cv.layers.RandAugment(
-    #         value_range=(0, 255),
-    #         augmentations_per_image=3,
-    #         magnitude=0.3,
-    #         magnitude_stddev=0.2,
-    #         rate=0.5,
-    #     )
-    #     inputs["images"] = rand_augment(inputs["images"])
-    #     return inputs
-
-    # def cut_mix_and_mix_up(samples):
-    #     cut_mix = keras_cv.layers.CutMix()
-    #     mix_up = keras_cv.layers.MixUp()
-    #     samples = cut_mix(samples, training=True)
-    #     samples = mix_up(samples, training=True)
-    #     return samples
 
     def build_augmentation(self):
         transform = keras_cv.layers.RandAugment(
