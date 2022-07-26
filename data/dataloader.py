@@ -37,6 +37,13 @@ class GetDataloader():
         if self.args.dataset_config["do_cache"]:
             dataloader = dataloader.cache()
 
+        # Add general stuff
+        dataloader = (
+            dataloader
+            .batch(self.args.dataset_config["batch_size"])
+            .prefetch(AUTOTUNE)
+        )
+
         # # Add augmentation to dataloader for training
         # if self.args.train_config["use_augmentations"] and dataloader_type=='train':
         #     self.transform = self.build_augmentation()
@@ -46,12 +53,7 @@ class GetDataloader():
         if self.args.train_config["use_augmentations"] and dataloader_type=='train':
             dataloader = dataloader.map(self.build_augmentation, num_parallel_calls=AUTOTUNE)
 
-        # Add general stuff
-        dataloader = (
-            dataloader
-            .batch(self.args.dataset_config["batch_size"])
-            .prefetch(AUTOTUNE)
-        )
+
 
         return dataloader
 
@@ -108,8 +110,8 @@ class GetDataloader():
               magnitude_stddev=0.2,
               rate=0.5,
           ),
-          # keras_cv.layers.CutMix(),
-          # keras_cv.layers.MixUp()
+          keras_cv.layers.CutMix(),
+          keras_cv.layers.MixUp()
         ]
         inputs = {"images": image, "labels": label}
         for layer in transform:
