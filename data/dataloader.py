@@ -37,10 +37,14 @@ class GetDataloader():
         if self.args.dataset_config["do_cache"]:
             dataloader = dataloader.cache()
 
+        # # Add augmentation to dataloader for training
+        # if self.args.train_config["use_augmentations"] and dataloader_type=='train':
+        #     self.transform = self.build_augmentation()
+        #     dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
+
         # Add augmentation to dataloader for training
         if self.args.train_config["use_augmentations"] and dataloader_type=='train':
-            self.transform = self.build_augmentation()
-            dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
+            dataloader = dataloader.map(self.build_augmentation, num_parallel_calls=AUTOTUNE)
 
         # Add general stuff
         dataloader = (
@@ -59,8 +63,8 @@ class GetDataloader():
         # resize the image to the desired size
         if self.args.dataset_config["apply_resize"] and dataloader_type=='train':
             img = tf.image.resize(img, 
-                                  [self.args.dataset_config["model_img_height"], 
-                                  self.args.dataset_config["model_img_width"]],
+                                  [self.args.train_config["model_img_height"], 
+                                  self.args.train_config["model_img_width"]],
                                   method='bicubic', 
                                   preserve_aspect_ratio=False)
             img = tf.clip_by_value(img, 0.0, 1.0)
@@ -95,18 +99,23 @@ class GetDataloader():
         else:
             raise NotImplementedError("Not implemented for this data_type")
 
-    def build_augmentation(self):
-        transform = keras_cv.layers.RandAugment(
-                          value_range=(0, 255),
-                          augmentations_per_image=3,
-                          magnitude=0.3,
-                          magnitude_stddev=0.2,
-                          rate=0.5,
-                      )
-        transform = keras_cv.layers.CutMix()
-        transform = keras_cv.layers.MixUp()
+    def build_augmentation(self, image, label):
+        transform = [
+          keras_cv.layers.RandAugment(
+              value_range=(0, 255),
+              augmentations_per_image=3,
+              magnitude=0.3,
+              magnitude_stddev=0.2,
+              rate=0.5,
+          ),
+          # keras_cv.layers.CutMix(),
+          # keras_cv.layers.MixUp()
+        ]
+        inputs = {"images": image, "labels": label}
+        for layer in transform:
+          inputs = layer(inputs)
 
-        return transform
+        return inputs['images'], inputs['labels']
 
     # def build_augmentation(self):
     #     transform = A.Compose([
@@ -120,23 +129,23 @@ class GetDataloader():
         
     #     return transform
 
-    def augmentation(self, image, label):
-        aug_img = tf.numpy_function(func=self.aug_fn, inp=[image], Tout=tf.float32)
-        aug_img.set_shape((self.args.train_config["model_img_height"], 
-                           self.args.train_config["model_img_width"], 3))
+    # def augmentation(self, image, label):
+    #     aug_img = tf.numpy_function(func=self.aug_fn, inp=[image], Tout=tf.float32)
+    #     aug_img.set_shape((self.args.train_config["model_img_height"], 
+    #                        self.args.train_config["model_img_width"], 3))
 
-        # aug_img = tf.image.resize(aug_img, 
-        #                      [self.args.train_config["model_img_height"], 
-        #                      self.args.train_config["model_img_width"]],
-        #                      method='bicubic', 
-        #                      preserve_aspect_ratio=False)
-        # aug_img = tf.clip_by_value(aug_img, 0.0, 1.0)
+    #     # aug_img = tf.image.resize(aug_img, 
+    #     #                      [self.args.train_config["model_img_height"], 
+    #     #                      self.args.train_config["model_img_width"]],
+    #     #                      method='bicubic', 
+    #     #                      preserve_aspect_ratio=False)
+    #     # aug_img = tf.clip_by_value(aug_img, 0.0, 1.0)
         
-        return aug_img, label
+    #     return aug_img, label
 
-    def aug_fn(self, image):
-        data = {"image":image}
-        aug_data = self.transform(**data)
-        aug_img = aug_data["image"]
+    # def aug_fn(self, image):
+    #     data = {"image":image}
+    #     aug_data = self.transform(**data)
+    #     aug_img = aug_data["image"]
 
-        return aug_img.astype(np.float32)
+    #     return aug_img.astype(np.float32)
