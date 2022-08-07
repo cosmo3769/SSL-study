@@ -19,7 +19,7 @@ from ssl_study.callbacks import GetCallbacks, PolynomialDecay
 from ssl_study.pipeline import SupervisedPipeline
 
 FLAGS = flags.FLAGS
-CONFIG = config_flags.DEFINE_config_file("configs")
+CONFIG = config_flags.DEFINE_config_file("config")
 
 def main(_):
     with wandb.init(

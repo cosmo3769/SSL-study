@@ -1,5 +1,5 @@
 from .pipeline import SupervisedPipeline
 
-__name__ = [
+__all__ = [
     'SupervisedPipeline'
 ]

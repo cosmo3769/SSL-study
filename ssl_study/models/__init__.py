@@ -1,5 +1,5 @@
 from .model import SimpleSupervisedModel
 
-__name__ = [
+__all__ = [
     'SimpleSupervisedModel'
 ]
