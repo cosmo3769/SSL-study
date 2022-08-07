@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from functools import partial
-import albumentations as A
+# import albumentations as A
 
 AUTOTUNE = tf.data.AUTOTUNE
 

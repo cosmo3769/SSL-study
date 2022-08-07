@@ -13,10 +13,10 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
-from data import download_dataset, preprocess_dataset, GetDataloader
-from models import SimpleSupervisedModel
-from callbacks import GetCallbacks, PolynomialDecay
-from pipeline import SupervisedPipeline
+from ssl.data import download_dataset, preprocess_dataset, GetDataloader
+from ssl.models import SimpleSupervisedModel
+from ssl.callbacks import GetCallbacks, PolynomialDecay
+from ssl.pipeline import SupervisedPipeline
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("configs")
