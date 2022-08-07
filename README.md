@@ -12,23 +12,30 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 ### Installations
 
+* Clone the repo: `git clone https://github.com/cosmo3769/SSL-study`
+* Move into the repo: `cd SSL-study`
+* Run: `python setup.py install`. If you want to develop do: `pip install -e .`
 * Run: `pip install --upgrade -r requirements.txt`
 
 ### Wandb Authorization
 
-* Run: `bash ./utils/utils.sh`
+* Run: `bash ssl_study/utils/utils.sh`
 
 ### Supervised Pipeline
 
 To train the supervised pipeline that trains a baseline image classifier using labeled training dataset:
 
-`python train.py --configs configs/config.py` 
+`python train.py --configs configs/baseline.py`
 
 ### Sweeps
 
-* Run: `python sweep_train.py --configs configs/config.py`
+* Run: `python sweep_train.py --configs configs/baseline.py`
 * Run: `wandb sweep /configs/sweep_config.yaml`
 * Run: `wandb agent entity-name/project-name/sweep-id`
+
+### Tests
+
+To run a particular test: `python -m unittest tests/test_*.py`
 
 **NOTE**
 
