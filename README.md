@@ -25,11 +25,11 @@ We have logged the entire dataset as W&B Artifacts for building easy data pipeli
 
 To train the supervised pipeline that trains a baseline image classifier using labeled training dataset:
 
-`python train.py --configs configs/baseline.py`
+`python train.py --config configs/baseline.py`
 
 ### Sweeps
 
-* Run: `python sweep_train.py --configs configs/baseline.py`
+* Run: `python sweep_train.py --config configs/baseline.py`
 * Run: `wandb sweep /configs/sweep_config.yaml`
 * Run: `wandb agent entity-name/project-name/sweep-id`
 
