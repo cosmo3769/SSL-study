@@ -33,14 +33,14 @@ To train the supervised pipeline that trains a baseline image classifier using l
 * Run: `wandb sweep /configs/sweep_config.yaml`
 * Run: `wandb agent entity-name/project-name/sweep-id`
 
-### Tests
-
-To run a particular test: `python -m unittest tests/test_*.py`
-
 **NOTE**
 
 * Change the `entity-name`, `project-name`, and `sweep-id` according to your `entity-name`, `project-name`, and `sweep-id`. 
 * You will get your sweep-id by running `wandb sweep /configs/sweep_config.yaml` as mentioned above.
+
+### Tests
+
+To run a particular test: `python -m unittest tests/test_*.py`
 
 # Citations
 
