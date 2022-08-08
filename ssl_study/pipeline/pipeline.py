@@ -63,15 +63,3 @@ class SupervisedPipeline():
                 'val_top@1': val_top_1_acc,
                 'val_top@5': val_top_5_acc
             })
-
-    def test(self, testloader):
-        '''Test Prediction'''
-        pred = self.model.predict(testloader)
-        pred_max = np.argmax(pred, axis = 1)
-        # TODO: Fix this
-        test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(pred, axis = 1))
-
-        if wandb.run is not None:
-            wandb.log({
-                'test_accuracy': test_accuracy
-            })
