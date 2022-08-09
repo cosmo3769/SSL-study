@@ -53,6 +53,12 @@ def main(_):
         test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(predictions, axis = 1))
 
         print(test_accuracy)
+        
+        # wandb log test accuracy
+        if wandb.run is not None:
+            wandb.log({
+                'test_accuracy': test_accuracy
+            })
 
 if __name__ == "__main__":
     app.run(main)
