@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 import wandb
 from tqdm import tqdm
 import tensorflow as tf
+from tensorflow.keras.models import save_model
 
 class SupervisedPipeline():
     def __init__(self, model, args, class_weights=None, callbacks=[]):
@@ -37,6 +38,10 @@ class SupervisedPipeline():
 
         # Evaluate
         val_eval_loss, val_top_1_acc, val_top_5_acc = self.model.evaluate(validloader)
+
+        # Save the model
+        filepath = './saved_model'
+        save_model(self.model, filepath)
 
         if self.args.train_config["use_log_validation_table"]:
           validation_table = wandb.Table(columns=["image_id", "image", "true_labels", "evaluated_labels"])
