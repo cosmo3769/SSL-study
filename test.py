@@ -7,10 +7,8 @@ from absl import app
 from absl import flags
 import numpy as np
 import tensorflow as tf
-from wandb.keras import WandbCallback
-from sklearn.utils import class_weight
 from ml_collections.config_flags import config_flags
-from tensorflow.keras.callbacks import LearningRateScheduler
+from tensorflow.keras.models import load_model
 
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataset, GetDataloader
@@ -42,6 +40,16 @@ def main(_):
         # Build dataloader
         dataset = GetDataloader(config)
         testloader = dataset.dataloader(test_paths, test_labels, dataloader_type='test')
+
+        # Load the model
+        filepath = './saved_model'
+        model = load_model(filepath, compile = True)
+
+        # Generate predictions
+        predictions = model.predict(testloader)
+
+        # Generate arg maxes for predictions
+        classes = np.argmax(predictions, axis = 1)
 
 if __name__ == "__main__":
     app.run(main)
