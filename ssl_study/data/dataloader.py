@@ -62,7 +62,14 @@ class GetDataloader():
                                   method='bicubic', 
                                   preserve_aspect_ratio=False)
             img = tf.clip_by_value(img, 0.0, 1.0)
-        elif self.args.dataset_config["apply_resize"] and dataloader_type==['valid', 'test']:
+        elif self.args.dataset_config["apply_resize"] and dataloader_type=='valid':
+            img = tf.image.resize(img, 
+                                  [self.args.train_config["model_img_height"], 
+                                  self.args.train_config["model_img_width"]],
+                                  method='bicubic', 
+                                  preserve_aspect_ratio=False)
+            img = tf.clip_by_value(img, 0.0, 1.0)
+        elif self.args.dataset_config["apply_resize"] and dataloader_type=='test':
             img = tf.image.resize(img, 
                                   [self.args.train_config["model_img_height"], 
                                   self.args.train_config["model_img_width"]],
