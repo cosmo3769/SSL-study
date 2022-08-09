@@ -6,6 +6,7 @@ import wandb
 from absl import app
 from absl import flags
 import numpy as np
+from sklearn.metrics import accuracy_score
 import tensorflow as tf
 from ml_collections.config_flags import config_flags
 from tensorflow.keras.models import load_model
@@ -47,9 +48,11 @@ def main(_):
 
         # Generate predictions
         predictions = model.predict(testloader)
+        
+        # Test Accuracy
+        test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(predictions, axis = 1))
 
-        # Generate arg maxes for predictions
-        classes = np.argmax(predictions, axis = 1)
+        print(test_accuracy)
 
 if __name__ == "__main__":
     app.run(main)
