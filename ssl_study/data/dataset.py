@@ -34,6 +34,10 @@ def download_dataset(dataset_name: str,
         data_df = pd.read_csv(save_at+'train.csv')
     elif dataset_name == 'val' and os.path.exists(save_at+'valid.csv'):
         data_df = pd.read_csv(save_at+'valid.csv')
+    elif dataset_name == 'in-class' and os.path.exists(save_at+'in-class.csv'):
+        data_df = pd.read_csv(save_at+'in-class.csv')
+    elif dataset_name == 'out-class' and os.path.exists(save_at+'out-class.csv'):
+        data_df = pd.read_csv(save_at+'out-class.csv')
     else:
         data_df = None
         print('Downloading dataset...')
@@ -81,6 +85,12 @@ def download_dataset(dataset_name: str,
 
     if dataset_name == 'val' and not os.path.exists(save_at+'valid.csv'):
         data_df.to_csv(save_at+'valid.csv', index=False)
+
+    if dataset_name == 'in-class' and not os.path.exists(save_at+'in-class.csv'):
+        data_df.to_csv(save_at+'in-class.csv', index=False)
+
+    if dataset_name == 'out-class' and not os.path.exists(save_at+'out-class.csv'):
+        data_df.to_csv(save_at+'out-class.csv', index=False)
 
     return data_df
 
