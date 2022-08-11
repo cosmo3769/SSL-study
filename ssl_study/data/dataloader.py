@@ -36,9 +36,10 @@ class GetDataloader():
             dataloader = dataloader.cache()
 
         # Add augmentation to dataloader for training
-        if self.args.train_config["use_augmentations"] and dataloader_type=='train':
-            self.transform = self.build_augmentation()
-            dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
+        if self.args.get('train_config', None):
+            if self.args.train_config["use_augmentations"] and dataloader_type=='train':
+                self.transform = self.build_augmentation()
+                dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
 
         # Add general stuff
         dataloader = (
@@ -71,8 +72,8 @@ class GetDataloader():
             img = tf.clip_by_value(img, 0.0, 1.0)
         elif self.args.dataset_config["apply_resize"] and dataloader_type=='test':
             img = tf.image.resize(img, 
-                                  [self.args.train_config["model_img_height"], 
-                                  self.args.train_config["model_img_width"]],
+                                  [self.args.test_config["model_img_height"], 
+                                  self.args.test_config["model_img_width"]],
                                   method='bicubic', 
                                   preserve_aspect_ratio=False)
             img = tf.clip_by_value(img, 0.0, 1.0)
