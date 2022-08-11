@@ -13,7 +13,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataset, GetDataloader
+from ssl_study.data import download_dataset, preprocess_dataframe, GetDataloader
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.callbacks import GetCallbacks, PolynomialDecay
 from ssl_study.pipeline import SupervisedPipeline
@@ -38,8 +38,8 @@ def main(_):
         valid_df = download_dataset('val', 'labelled-dataset')
 
         # Preprocess the DataFrames
-        train_paths, train_labels = preprocess_dataset(train_df)
-        valid_paths, valid_labels = preprocess_dataset(valid_df)
+        train_paths, train_labels = preprocess_dataframe(train_df)
+        valid_paths, valid_labels = preprocess_dataframe(valid_df)
 
         # Compute class weights if use_class_weights is True.
         class_weights = None

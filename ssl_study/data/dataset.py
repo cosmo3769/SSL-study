@@ -90,7 +90,7 @@ def download_dataset(dataset_name: str,
     return data_df
 
 
-def preprocess_dataset(df):
+def preprocess_dataframe(df):
     # TODO: take care of df without labels.
     # Remove unnecessary columns
     df = df.drop(['image_id', 'width', 'height'], axis=1)

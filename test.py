@@ -12,7 +12,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.models import load_model
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataset, GetDataloader
+from ssl_study.data import download_dataset, preprocess_dataframe, GetDataloader
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.callbacks import GetCallbacks, PolynomialDecay
 from ssl_study.pipeline import SupervisedPipeline
@@ -36,7 +36,7 @@ def main(_):
         test_df = download_dataset('test', 'labelled-dataset')
 
         # Preprocess the DataFrame
-        test_paths, test_labels = preprocess_dataset(test_df)
+        test_paths, test_labels = preprocess_dataframe(test_df)
 
         # Build dataloader
         dataset = GetDataloader(config)
