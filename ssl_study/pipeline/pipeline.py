@@ -39,7 +39,11 @@ class SupervisedPipeline():
         # Evaluate
         val_eval_loss, val_top_1_acc, val_top_5_acc = self.model.evaluate(validloader)
 
-        if self.args.bool_config["use_log_validation_table"]:
+        # Save the model
+        filepath = './saved_model'
+        save_model(self.model, filepath)
+
+        if self.args.train_config["use_log_validation_table"]:
           validation_table = wandb.Table(columns=["image_id", "image", "true_labels", "evaluated_labels"])
           evaluation = self.model.predict(validloader)
           for i, tmp_df in tqdm(valid_df.iterrows()):
@@ -51,7 +55,7 @@ class SupervisedPipeline():
               )
 
         if wandb.run is not None:
-          if self.args.bool_config["use_log_validation_table"]:
+          if self.args.train_config["use_log_validation_table"]:
             wandb.log({
                 'val_eval_loss': val_eval_loss,
                 'val_top@1': val_top_1_acc,

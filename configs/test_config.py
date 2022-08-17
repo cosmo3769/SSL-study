@@ -28,6 +28,12 @@ def get_test_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+def get_modelcheckpoint_configs() -> ml_collections.ConfigDict:
+    configs = ml_collections.ConfigDict()
+    configs.filepath = './best-model'
+
+    return configs
+
 # TODO (ayulockin): remove get_config to a different py file
 # and condition it with config_string as referenced here:
 # https://github.com/google/ml_collections#parameterising-the-get_config-function
@@ -37,5 +43,6 @@ def get_config() -> ml_collections.ConfigDict:
     config.wandb_config = get_wandb_configs()
     config.dataset_config = get_dataset_configs()
     config.test_config = get_test_configs()
+    config.modelcheckpoint_config = get_modelcheckpoint_configs()
 
     return config

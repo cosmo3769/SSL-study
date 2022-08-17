@@ -40,16 +40,13 @@ def main(_):
         testloader = dataset.dataloader(test_paths)
 
         # Load the model
-        filepath = './saved_model'
-        model = load_model(filepath, compile = True)
+        model = load_model(config.modelcheckpoint_config["filepath"], compile = True)
 
         # Generate predictions
         predictions = model.predict(testloader)
         
         # Test Accuracy
         test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(predictions, axis = 1))
-
-        print(test_accuracy)
         
         # wandb log test accuracy
         if wandb.run is not None:

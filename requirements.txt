@@ -1,3 +1,4 @@
 wandb
 ml-collections
 albumentations
+tensorflow==2.8.2

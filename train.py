@@ -43,7 +43,7 @@ def main(_):
 
         # Compute class weights if use_class_weights is True.
         class_weights = None
-        if config.bool_config["use_class_weights"]:
+        if config.train_config["use_class_weights"]:
             class_weights = class_weight.compute_class_weight(class_weight='balanced', 
                                   classes=np.unique(train_labels), 
                                   y=train_labels)
@@ -60,15 +60,12 @@ def main(_):
         model.summary()
 
         # Get learning rate schedulers
-        if config.bool_config["use_lr_scheduler"]:
+        if config.train_config["use_lr_scheduler"]:
             schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
 
         # Build callbacks
-        callback = GetCallbacks(config)
-        if config.bool_config["save_model"]:
-            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule), callback.get_model_checkpoint()]
-        else:  
-            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
+        # callback = GetCallbacks(config)
+        callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
         
         # Build the pipeline
         pipeline = SupervisedPipeline(model, config, class_weights, callbacks)

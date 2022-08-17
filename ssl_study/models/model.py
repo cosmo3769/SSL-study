@@ -49,13 +49,13 @@ class SimpleSupervisedModel():
     def get_backbone(self):
         """Get backbone for the model."""
         weights = None
-        if self.args.bool_config["use_pretrained_weights"]:
+        if self.args.train_config["use_pretrained_weights"]:
             weights = "imagenet"
 
         if self.args.train_config["backbone"] == 'resnet50':
             base_model = tf.keras.applications.ResNet50(include_top=False, weights=weights)
             base_model.trainabe = True
-            if self.args.bool_config["regularize_backbone"]:
+            if self.args.train_config["regularize_backbone"]:
                 base_model = regularize_backbone(base_model,
                                 regularizer=tf.keras.regularizers.l2(self.args.train_config["l2_regularizer"]))
         else:
@@ -76,7 +76,7 @@ class SimpleSupervisedModel():
 
         x = base_model(inputs, training=True)
         x = tf.keras.layers.GlobalAveragePooling2D()(x)
-        if self.args.bool_config["post_gap_dropout"]:
+        if self.args.train_config["post_gap_dropout"]:
             x = tf.keras.layers.Dropout(self.args.train_config["dropout_rate"])(x)
         outputs = tf.keras.layers.Dense(self.args.dataset_config["num_classes"], activation='softmax')(x)
 

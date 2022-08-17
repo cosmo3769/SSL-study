@@ -25,17 +25,20 @@ class GetCallbacks():
 
         return earlystopper
 
+<<<<<<< HEAD
     def get_model_checkpoint(self):
         best_model = tf.keras.callbacks.ModelCheckpoint(
                                                         filepath = self.args.callback_config["filepath"],
-                                                        monitor='val_top_1_acc',
+                                                        monitor='val_loss',
                                                         verbose=0,
                                                         save_best_only=True,
                                                         save_weights_only=False,
-                                                        mode='max',
+                                                        mode='min',
                                                     )
         return best_model
 
+=======
+>>>>>>> parent of 169bf72... added modelcheckpoint callback+restructured config
     def get_reduce_lr_on_plateau(self):
         reduce_lr_on_plateau = tf.keras.callbacks.ReduceLROnPlateau(
             monitor='val_loss',
