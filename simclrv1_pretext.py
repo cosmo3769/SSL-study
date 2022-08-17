@@ -11,6 +11,7 @@ from ml_collections.config_flags import config_flags
 
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataframe_unlabelled
+from ssl_study.simclrv1.pretext_task.data import GetDataloader
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -33,7 +34,9 @@ def main(_):
         # Preprocess the DataFrames
         inclass_paths = preprocess_dataframe_unlabelled(inclass_df)
 
-        print(inclass_paths)
+        # Build dataloaders
+        dataset = GetDataloader(config)
+        inclassloader = dataset.dataloader(inclass_paths)
 
 if __name__ == "__main__":
     app.run(main)
