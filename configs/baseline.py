@@ -14,11 +14,8 @@ def get_dataset_configs() -> ml_collections.ConfigDict:
     configs.image_height = 300 #default - 224
     configs.image_width = 300 #default - 224
     configs.channels = 3
-    configs.apply_resize = True
     configs.batch_size = 64
     configs.num_classes = 200
-    configs.apply_one_hot = True
-    configs.do_cache = False
 
     return configs
 
@@ -36,14 +33,7 @@ def get_train_configs() -> ml_collections.ConfigDict:
     configs.model_img_channels = 3
     configs.backbone = "resnet50"
     configs.epochs = 3
-    configs.use_pretrained_weights = True
-    configs.regularize_backbone = True
     configs.l2_regularizer = 0.0001
-    configs.use_augmentations = True
-    configs.use_class_weights = True
-    configs.post_gap_dropout = True
-    configs.use_lr_scheduler = True
-    configs.use_log_validation_table = False
     configs.dropout_rate = 0.5
     configs.optimizer = "sgd"
     configs.sgd_momentum = 0.9
@@ -51,8 +41,24 @@ def get_train_configs() -> ml_collections.ConfigDict:
     configs.early_patience = 6
     configs.rlrp_factor = 0.2
     configs.rlrp_patience = 3
-    configs.resume = False
     configs.reg = 0.0001
+
+    return configs
+
+def get_bool_configs() -> ml_collections.ConfigDict:
+    configs = ml_collections.ConfigDict()
+    configs.use_pretrained_weights = True
+    configs.regularize_backbone = True
+    configs.use_augmentations = True
+    configs.use_class_weights = True
+    configs.post_gap_dropout = True
+    configs.use_lr_scheduler = True
+    configs.use_log_validation_table = False
+    configs.resume = False
+    configs.apply_resize = True
+    configs.apply_one_hot = True
+    configs.do_cache = False
+    configs.save_model = True
 
     return configs
 
@@ -63,6 +69,12 @@ def get_lr_configs() -> ml_collections.ConfigDict:
     configs.exp_decay_steps = 1000
     configs.exp_decay_rate = 0.96
     configs.exp_is_staircase = True
+
+    return configs
+
+def get_callback_configs() -> ml_collections.ConfigDict:
+    configs = ml_collections.ConfigDict()
+    configs.filepath = './best-model'
 
     return configs
 
@@ -77,5 +89,7 @@ def get_config() -> ml_collections.ConfigDict:
     config.augmentation_config = get_augmentation_configs()
     config.train_config = get_train_configs()
     config.lr_config = get_lr_configs()
+    config.bool_config = get_bool_configs()
+    config.callback_config = get_callback_configs()
 
     return config
