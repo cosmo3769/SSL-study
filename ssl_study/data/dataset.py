@@ -94,8 +94,7 @@ def download_dataset(dataset_name: str,
 
     return data_df
 
-
-def preprocess_dataset(df):
+def preprocess_dataframe_labelled(df):
     # TODO: take care of df without labels.
     # Remove unnecessary columns
     df = df.drop(['image_id', 'width', 'height'], axis=1)
@@ -108,3 +107,12 @@ def preprocess_dataset(df):
     labels = df.label.values
 
     return image_paths, labels
+
+def preprocess_dataframe_unlabelled(df):
+    # Remove unnecessary columns
+    df = df.drop(['image_id', 'width', 'height'], axis=1)
+
+    # Fix types
+    image_paths = df.image_path.values
+
+    return image_paths

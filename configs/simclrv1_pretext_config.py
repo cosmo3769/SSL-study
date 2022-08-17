@@ -1,7 +1,6 @@
 import os
 import ml_collections
 
-
 def get_wandb_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.project = "ssl-study"
