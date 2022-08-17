@@ -70,13 +70,6 @@ class GetDataloader():
                                   method='bicubic', 
                                   preserve_aspect_ratio=False)
             img = tf.clip_by_value(img, 0.0, 1.0)
-        elif self.args.dataset_config["apply_resize"] and dataloader_type=='test':
-            img = tf.image.resize(img, 
-                                  [self.args.test_config["model_img_height"], 
-                                  self.args.test_config["model_img_width"]],
-                                  method='bicubic', 
-                                  preserve_aspect_ratio=False)
-            img = tf.clip_by_value(img, 0.0, 1.0)
         else:
             raise NotImplementedError("No data type")
 
@@ -87,19 +80,14 @@ class GetDataloader():
         image = tf.io.read_file(path)
         image = self.decode_image(image, dataloader_type)
 
-        if dataloader_type in ['train', 'valid']:
-            # Parse Target
-            label = tf.cast(label, dtype=tf.int64)
-            if self.args.dataset_config["apply_one_hot"]:
-                label = tf.one_hot(
-                    label,
-                    depth=self.args.dataset_config["num_classes"]
-                    )
-            return image, label
-        elif dataloader_type == 'test':
-            return image
-        else:
-            raise NotImplementedError("Not implemented for this data_type")
+        # Parse Target
+        label = tf.cast(label, dtype=tf.int64)
+        if self.args.dataset_config["apply_one_hot"]:
+            label = tf.one_hot(
+                label,
+                depth=self.args.dataset_config["num_classes"]
+                )
+        return image, label
 
     def build_augmentation(self):
         transform = A.Compose([

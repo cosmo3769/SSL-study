@@ -12,10 +12,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.models import load_model
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataframe, GetDataloader
-from ssl_study.models import SimpleSupervisedModel
-from ssl_study.callbacks import GetCallbacks, PolynomialDecay
-from ssl_study.pipeline import SupervisedPipeline
+from ssl_study.data import download_dataset, preprocess_dataframe_unlabelled, GetDataloader, GetTestDataloader
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -36,11 +33,11 @@ def main(_):
         test_df = download_dataset('test', 'labelled-dataset')
 
         # Preprocess the DataFrame
-        test_paths, test_labels = preprocess_dataframe(test_df)
+        test_paths = preprocess_dataframe_unlabelled(test_df)
 
         # Build dataloader
-        dataset = GetDataloader(config)
-        testloader = dataset.dataloader(test_paths, test_labels, dataloader_type='test')
+        dataset = GetTestDataloader(config)
+        testloader = dataset.dataloader(test_paths)
 
         # Load the model
         filepath = './saved_model'
