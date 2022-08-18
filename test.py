@@ -12,7 +12,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.models import load_model
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataframe_unlabelled, GetDataloader, GetTestDataloader
+from ssl_study.data import download_dataset, preprocess_dataframe_unlabelled, GetDataloader, GetTestDataloader, preprocess_dataframe
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -33,7 +33,7 @@ def main(_):
         test_df = download_dataset('test', 'labelled-dataset')
 
         # Preprocess the DataFrame
-        test_paths = preprocess_dataframe_unlabelled(test_df)
+        test_paths = preprocess_dataframe(test_df, is_labelled=False)
 
         # Build dataloader
         dataset = GetTestDataloader(config)
