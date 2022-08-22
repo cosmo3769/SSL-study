@@ -55,5 +55,6 @@ def get_config() -> ml_collections.ConfigDict:
     config.dataset_config = get_dataset_configs()
     config.augmentation_config = get_augment_configs()
     config.bool_config = get_bool_configs()
+    config.train_config = get_train_configs()
 
     return config

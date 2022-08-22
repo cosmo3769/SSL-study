@@ -1,3 +1,4 @@
+from albumentations import augmentations
 from albumentations.augmentations.transforms import ToGray
 import numpy as np
 import tensorflow as tf
@@ -46,6 +47,11 @@ class Augment():
         aug_img = tf.clip_by_value(aug_img, 0.0, 1.0)
         
         return aug_img
+
+    def simclrv1_augmentation(self, image):
+        a1 = self.augmentation(image)
+        a2 = self.augmentation(image)
+        return a1, a2
 
     def aug_fn(self, image):
         data = {"image":image}
