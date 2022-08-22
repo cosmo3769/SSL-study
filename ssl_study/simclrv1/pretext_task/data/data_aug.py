@@ -1,3 +1,4 @@
+from albumentations.augmentations.transforms import ToGray
 import numpy as np
 import tensorflow as tf
 from functools import partial
@@ -16,16 +17,18 @@ class Augment():
                                 self.args.augmentation_config["cropscale"],
                                 self.args.augmentation_config["cropratio"],
                                 self.args.augmentation_config["probability"]),
-            A.ColorJitter (self.args.augmentation_config["jitterbrightness"], 
-                           self.args.augmentation_config["jittercontrast"], 
-                           self.args.augmentation_config["jittersaturation"], 
-                           self.args.augmentation_config["hue"], 
+            A.HorizontalFlip(self.args.augmentation_config["probability"]),
+            A.ColorJitter(self.args.augmentation_config["jitterbrightness"], 
+                          self.args.augmentation_config["jittercontrast"], 
+                          self.args.augmentation_config["jittersaturation"], 
+                          self.args.augmentation_config["hue"], 
+                          self.args.augmentation_config["alwaysapply"], 
+                          self.args.augmentation_config["probablility"]),
+            A.ToGray(self.args.augmentation_config["probability"]),
+            A.GaussianBlur(self.args.augmentation_config["gaussianblurlimit"], 
+                           self.args.augmentation_config["gaussiansigmalimit"], 
                            self.args.augmentation_config["alwaysapply"], 
-                           self.args.augmentation_config["probablility"]),
-            A.GaussianBlur (self.args.augmentation_config["gaussianblurlimit"], 
-                            self.args.augmentation_config["gaussiansigmalimit"], 
-                            self.args.augmentation_config["alwaysapply"], 
-                            self.args.augmentation_config["probability"])
+                           self.args.augmentation_config["probability"])
         ])
         return transform
 
