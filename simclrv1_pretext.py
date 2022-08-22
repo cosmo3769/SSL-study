@@ -10,7 +10,7 @@ import tensorflow as tf
 from ml_collections.config_flags import config_flags
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataframe_unlabelled
+from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.pretext_task.data import GetDataloader
 
 FLAGS = flags.FLAGS
@@ -32,7 +32,7 @@ def main(_):
         inclass_df = download_dataset('in-class', 'unlabelled-dataset')
 
         # Preprocess the DataFrames
-        inclass_paths = preprocess_dataframe_unlabelled(inclass_df)
+        inclass_paths = preprocess_dataframe(inclass_df)
 
         # Build dataloaders
         dataset = GetDataloader(config)
