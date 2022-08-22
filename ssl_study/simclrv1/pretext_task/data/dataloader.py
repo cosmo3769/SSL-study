@@ -25,7 +25,7 @@ class GetDataloader():
             .map(self.parse_data, num_parallel_calls=AUTOTUNE)
         )
 
-        if self.args.dataset_config["do_cache"]:
+        if self.args.bool_config["do_cache"]:
             dataloader = dataloader.cache()
 
         # Add general stuff
@@ -43,11 +43,12 @@ class GetDataloader():
         image_string = tf.io.read_file(path)
         image = tf.image.decode_jpeg(image_string, channels=3)
         image = tf.image.convert_image_dtype(image, dtype=tf.float32)
-        image = tf.image.resize(image, 
-                                  [self.args.dataset_config["image_height"], 
-                                   self.args.dataset_config["image_width"]],
-                                  method='bicubic', 
-                                  preserve_aspect_ratio=False)
-        image = tf.clip_by_value(image, 0.0, 1.0)
+        if self.args.bool_config["apply_resize"]:
+            image = tf.image.resize(image, 
+                                      [self.args.dataset_config["image_height"], 
+                                      self.args.dataset_config["image_width"]],
+                                      method='bicubic', 
+                                      preserve_aspect_ratio=False)
+            image = tf.clip_by_value(image, 0.0, 1.0)
 
         return image
