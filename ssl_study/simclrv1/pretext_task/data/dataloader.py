@@ -29,13 +29,9 @@ class GetDataloader():
         if self.args.bool_config["do_cache"]:
             dataloader = dataloader.cache()
 
-        # Add simclrv1 augmentaion
-        dataloader = dataloader.map(Augment.simclrv1_augmentation(), num_parallel_calls=AUTOTUNE)
-
         # Add general stuff
         dataloader = (
             dataloader
-            .repeat(self.args.train_config['epochs'])
             .shuffle(self.args.dataset_config["batch_size"])
             .batch(self.args.dataset_config["batch_size"])
             .prefetch(AUTOTUNE)

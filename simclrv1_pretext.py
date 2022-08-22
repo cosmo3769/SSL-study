@@ -32,7 +32,7 @@ def main(_):
         inclass_df = download_dataset('in-class', 'unlabelled-dataset')
 
         # Preprocess the DataFrames
-        inclass_paths = preprocess_dataframe(inclass_df)
+        inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
 
         # Build dataloaders
         dataset = GetDataloader(config)

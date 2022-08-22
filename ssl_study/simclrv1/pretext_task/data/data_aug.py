@@ -38,7 +38,6 @@ class Augment():
         aug_img.set_shape((self.args.augmentation_config["img_height"], 
                            self.args.augmentation_config["img_width"], 3))
 
-        aug_img = tf.image.random_flip_left_right(aug_img)
         aug_img = tf.image.resize(aug_img, 
                              [self.args.augmentation_config["img_height"], 
                              self.args.augmentation_config["img_width"]],
@@ -47,11 +46,6 @@ class Augment():
         aug_img = tf.clip_by_value(aug_img, 0.0, 1.0)
         
         return aug_img
-
-    def simclrv1_augmentation(self, image):
-        a1 = self.augmentation(image)
-        a2 = self.augmentation(image)
-        return a1, a2
 
     def aug_fn(self, image):
         data = {"image":image}

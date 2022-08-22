@@ -42,11 +42,15 @@ def get_bool_configs() -> ml_collections.ConfigDict:
     configs.do_cache = False
     configs.use_cosine_similarity = True
 
+    return configs
+
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.epochs = 30
     configs.temperature = 0.5
     configs.s = 1 
+
+    return configs
     
 def get_config() -> ml_collections.ConfigDict:
     config = ml_collections.ConfigDict()
