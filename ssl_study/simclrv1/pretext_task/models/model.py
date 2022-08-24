@@ -8,7 +8,7 @@ class SimCLRv1Model():
         """Get backbone for the model."""
         weights = None
 
-        if self.args.train_config["backbone"] == 'resnet50':
+        if self.args.model_config["backbone"] == 'resnet50':
             base_encoder = tf.keras.applications.ResNet50(include_top=False, weights=weights)
             base_encoder.trainabe = True
         else:
@@ -23,9 +23,9 @@ class SimCLRv1Model():
 
         # Stack layers
         inputs = tf.keras.layers.Input(
-            (self.args.train_config["model_img_height"],
-             self.args.train_config["model_img_width"],
-             self.args.train_config["model_img_channels"]))
+            (self.args.dataset_config["image_height"],
+             self.args.dataset_config["image_width"],
+             self.args.dataset_config["channels"]))
 
         x = base_encoder(inputs, training=True)
 

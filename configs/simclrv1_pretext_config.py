@@ -37,10 +37,18 @@ def get_augment_configs() -> ml_collections.ConfigDict:
 
 def get_bool_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.backbone = "resnet50"
     configs.apply_resize = True
     configs.do_cache = False
     configs.use_cosine_similarity = True
+
+    return configs
+
+def get_model_configs() -> ml_collections.ConfigDict:
+    configs = ml_collections.ConfigDict()
+    configs.backbone = "resnet50"
+    configs.hidden1 = 256
+    configs.hidden2 = 128
+    configs.hidden3 = 50
 
     return configs
 
@@ -51,6 +59,11 @@ def get_train_configs() -> ml_collections.ConfigDict:
     configs.s = 1 
 
     return configs
+
+def get_learning_rate_configs() -> ml_collections.ConfigDict:
+    configs = ml_collections.ConfigDict()
+    configs.decay_steps = 1000
+    configs.initial_learning_rate = 0.1
     
 def get_config() -> ml_collections.ConfigDict:
     config = ml_collections.ConfigDict()
@@ -60,5 +73,7 @@ def get_config() -> ml_collections.ConfigDict:
     config.augmentation_config = get_augment_configs()
     config.bool_config = get_bool_configs()
     config.train_config = get_train_configs()
+    config.learning_rate_config = get_learning_rate_configs()
+    config.model_config = get_model_configs()
 
     return config

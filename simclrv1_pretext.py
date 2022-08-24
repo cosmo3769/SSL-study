@@ -12,6 +12,8 @@ from ml_collections.config_flags import config_flags
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.pretext_task.data import GetDataloader
+from ssl_study.simclrv1.pretext_task.models import SimCLRv1Model
+from ssl_study.simclrv1.pretext_task.pipeline import SimCLRv1Pipeline
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -37,6 +39,11 @@ def main(_):
         # Build dataloaders
         dataset = GetDataloader(config)
         inclassloader = dataset.dataloader(inclass_paths)
+
+        # Model 
+        tf.keras.backend.clear_session()
+        model = SimCLRv1Model(config).get_model(config.model_config["hidden1"], config.model_config["hidden2"], config.model_config["hidden3"])
+        model.summary()
 
 if __name__ == "__main__":
     app.run(main)

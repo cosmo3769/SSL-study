@@ -10,12 +10,10 @@ import tensorflow as tf
 from ssl_study.simclrv1.pretext_task.utils import _dot_simililarity_dim1 as sim_func_dim1, _dot_simililarity_dim2 as sim_func_dim2, get_negative_mask
 from ssl_study.simclrv1.pretext_task.data import Augment
 
-class SupervisedPipeline():
-    def __init__(self, model, args, class_weights=None, callbacks=[]):
+class SimCLRv1Pipeline():
+    def __init__(self, model, args):
         self.args = args
         self.model = model
-        self.class_weights = class_weights
-        self.callbacks = callbacks
 
     @tf.function
     def train_step(self, xis, xjs, model, optimizer, criterion, temperature):
