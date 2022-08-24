@@ -45,5 +45,13 @@ def main(_):
         model = SimCLRv1Model(config).get_model(config.model_config["hidden1"], config.model_config["hidden2"], config.model_config["hidden3"])
         model.summary()
 
+        # Build the pipeline 
+        pipeline = SimCLRv1Pipeline(model, config)
+        optimizer = pipeline.get_optimizer
+        criterion = pipeline.get_criterion
+
+        epoch_wise_loss, resnet_simclr  = pipeline.train_simclr(model, inclassloader, optimizer, criterion, temperature=config.train_config["temperature"], epochs=config.train_config["epochs"])
+
+
 if __name__ == "__main__":
     app.run(main)

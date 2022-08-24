@@ -56,12 +56,12 @@ class SimCLRv1Pipeline():
         step_wise_loss = []
         epoch_wise_loss = []
 
-        augment = Augment.augmentation()
+        augment = Augment(self.args)
 
         for epoch in tqdm(range(epochs)):
             for image_batch in dataset:
-                a = augment(image_batch)
-                b = augment(image_batch)
+                a = augment.augmentation(image_batch)
+                b = augment.augmentation(image_batch)
 
                 loss = self.train_step(a, b, model, optimizer, criterion, temperature)
                 step_wise_loss.append(loss)
@@ -73,3 +73,12 @@ class SimCLRv1Pipeline():
                 print("epoch: {} loss: {:.3f}".format(epoch + 1, np.mean(step_wise_loss)))
 
         return epoch_wise_loss, model
+
+    def get_criterion(self):
+        return tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction=tf.keras.losses.Reduction.SUM)
+
+    def get_optimizer(self): 
+        learning_rate = tf.keras.experimental.CosineDecay(initial_learning_rate= self.args.learning_rate_config['initial_learning_rate'], decay_steps=self.args.learning_rate_config['decay_steps'])
+        optimizer = tf.keras.optimizers.SGD(learning_rate)
+
+        return optimizer
