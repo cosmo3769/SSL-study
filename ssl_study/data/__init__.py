@@ -1,6 +1,6 @@
-from .dataset import download_dataset, preprocess_dataset
+from .dataset import download_dataset, preprocess_dataframe
 from .dataloader import GetDataloader
 
 __all__ = [
-    'download_dataset', 'preprocess_dataset', 'GetDataloader'
+    'download_dataset', 'preprocess_dataframe', 'GetDataloader'
 ]
