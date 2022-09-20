@@ -6,6 +6,7 @@ from sklearn.metrics import accuracy_score
 import wandb
 from tqdm import tqdm
 import tensorflow as tf
+from tensorflow.keras.models import save_model
 
 class SupervisedPipeline():
     def __init__(self, model, args, class_weights=None, callbacks=[]):
@@ -38,7 +39,7 @@ class SupervisedPipeline():
         # Evaluate
         val_eval_loss, val_top_1_acc, val_top_5_acc = self.model.evaluate(validloader)
 
-        if self.args.train_config["use_log_validation_table"]:
+        if self.args.bool_config["use_log_validation_table"]:
           validation_table = wandb.Table(columns=["image_id", "image", "true_labels", "evaluated_labels"])
           evaluation = self.model.predict(validloader)
           for i, tmp_df in tqdm(valid_df.iterrows()):
@@ -50,7 +51,7 @@ class SupervisedPipeline():
               )
 
         if wandb.run is not None:
-          if self.args.train_config["use_log_validation_table"]:
+          if self.args.bool_config["use_log_validation_table"]:
             wandb.log({
                 'val_eval_loss': val_eval_loss,
                 'val_top@1': val_top_1_acc,
@@ -62,16 +63,4 @@ class SupervisedPipeline():
                 'val_eval_loss': val_eval_loss,
                 'val_top@1': val_top_1_acc,
                 'val_top@5': val_top_5_acc
-            })
-
-    def test(self, testloader):
-        '''Test Prediction'''
-        pred = self.model.predict(testloader)
-        pred_max = np.argmax(pred, axis = 1)
-        # TODO: Fix this
-        test_accuracy = accuracy_score(np.array(test_df['label']), np.argmax(pred, axis = 1))
-
-        if wandb.run is not None:
-            wandb.log({
-                'test_accuracy': test_accuracy
             })

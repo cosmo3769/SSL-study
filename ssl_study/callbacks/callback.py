@@ -25,6 +25,17 @@ class GetCallbacks():
 
         return earlystopper
 
+    def get_model_checkpoint(self):
+        best_model = tf.keras.callbacks.ModelCheckpoint(
+                                                        filepath = self.args.callback_config["filepath"],
+                                                        monitor='val_loss',
+                                                        verbose=0,
+                                                        save_best_only=True,
+                                                        save_weights_only=False,
+                                                        mode='min',
+                                                    )
+        return best_model
+
     def get_reduce_lr_on_plateau(self):
         reduce_lr_on_plateau = tf.keras.callbacks.ReduceLROnPlateau(
             monitor='val_loss',

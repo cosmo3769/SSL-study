@@ -29,6 +29,10 @@ To train the supervised pipeline that trains a baseline image classifier using l
 
 `python train.py --config configs/baseline.py`
 
+To test your trained model, run: 
+
+`python test.py --config configs/test_config.py`
+
 ### Sweeps
 
 * Run: `python sweep_train.py --config configs/baseline.py`

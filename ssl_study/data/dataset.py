@@ -34,6 +34,8 @@ def download_dataset(dataset_name: str,
         data_df = pd.read_csv(save_at+'train.csv')
     elif dataset_name == 'val' and os.path.exists(save_at+'valid.csv'):
         data_df = pd.read_csv(save_at+'valid.csv')
+    elif dataset_name == 'test' and os.path.exists(save_at+'test.csv'):
+        data_df = pd.read_csv(save_at+'test.csv')
     else:
         data_df = None
         print('Downloading dataset...')
@@ -82,19 +84,20 @@ def download_dataset(dataset_name: str,
     if dataset_name == 'val' and not os.path.exists(save_at+'valid.csv'):
         data_df.to_csv(save_at+'valid.csv', index=False)
 
+    if dataset_name == 'test' and not os.path.exists(save_at+'test.csv'):
+        data_df.to_csv(save_at+'test.csv', index=False)
+
     return data_df
 
-
-def preprocess_dataset(df):
-    # TODO: take care of df without labels.
-    # Remove unnecessary columns
+def preprocess_dataframe(df, is_labelled=True):
     df = df.drop(['image_id', 'width', 'height'], axis=1)
-    assert len(df.columns) == 2
-
-    # Fix types
-    df[['label']] = df[['label']].apply(pd.to_numeric)
-
     image_paths = df.image_path.values
-    labels = df.label.values
 
-    return image_paths, labels
+    if is_labelled:
+        assert len(df.columns) == 2
+        # Fix types
+        df[['label']] = df[['label']].apply(pd.to_numeric)
+        labels = df.label.values
+        return image_paths, labels
+    else:
+        return image_paths

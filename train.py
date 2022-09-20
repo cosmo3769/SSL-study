@@ -13,7 +13,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataset, GetDataloader
+from ssl_study.data import download_dataset, preprocess_dataframe_labelled, GetDataloader, preprocess_dataframe
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.callbacks import GetCallbacks, PolynomialDecay
 from ssl_study.pipeline import SupervisedPipeline
@@ -38,12 +38,12 @@ def main(_):
         valid_df = download_dataset('val', 'labelled-dataset')
 
         # Preprocess the DataFrames
-        train_paths, train_labels = preprocess_dataset(train_df)
-        valid_paths, valid_labels = preprocess_dataset(valid_df)
+        train_paths, train_labels = preprocess_dataframe(train_df, is_labelled=True)
+        valid_paths, valid_labels = preprocess_dataframe(valid_df, is_labelled=True)
 
         # Compute class weights if use_class_weights is True.
         class_weights = None
-        if config.train_config["use_class_weights"]:
+        if config.bool_config["use_class_weights"]:
             class_weights = class_weight.compute_class_weight(class_weight='balanced', 
                                   classes=np.unique(train_labels), 
                                   y=train_labels)
@@ -60,12 +60,15 @@ def main(_):
         model.summary()
 
         # Get learning rate schedulers
-        if config.train_config["use_lr_scheduler"]:
+        if config.bool_config["use_lr_scheduler"]:
             schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
 
         # Build callbacks
-        # callback = GetCallbacks(config)
-        callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
+        callback = GetCallbacks(config)
+        if config.bool_config["save_model"]:
+            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule), callback.get_model_checkpoint()]
+        else:
+            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
         
         # Build the pipeline
         pipeline = SupervisedPipeline(model, config, class_weights, callbacks)
