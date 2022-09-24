@@ -13,11 +13,17 @@ def get_wandb_configs() -> ml_collections.ConfigDict:
 
 def get_dataset_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.image_height = 300  # default - 224
-    configs.image_width = 300  # default - 224
+    configs.image_height = 224  # default: 224
+    configs.image_width = 224  # default: 224
     configs.channels = 3
+    configs.shuffle_buffer = 1024
     configs.batch_size = 64
     configs.num_classes = 200
+    configs.do_cache = False
+    configs.use_augmentations = False
+    # Always True since images are of varying sizes.
+    configs.apply_resize = True
+    configs.apply_one_hot = True
 
     return configs
 
@@ -54,16 +60,9 @@ def get_bool_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.use_pretrained_weights = True
     configs.regularize_backbone = True
-    configs.use_augmentations = True
     configs.use_class_weights = True
     configs.post_gap_dropout = True
-    configs.use_lr_scheduler = True
-    configs.use_log_validation_table = False
     configs.resume = False
-    configs.apply_resize = True
-    configs.apply_one_hot = True
-    configs.do_cache = False
-    configs.save_model = True
 
     return configs
 
@@ -81,7 +80,21 @@ def get_lr_configs() -> ml_collections.ConfigDict:
 
 def get_callback_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.filepath = "./best-model"
+    configs = ml_collections.ConfigDict()
+    # Early stopping
+    configs.use_earlystopping = True
+    configs.early_patience = 6
+    # Reduce LR on plateau
+    configs.use_reduce_lr_on_plateau = False
+    configs.rlrp_factor = 0.2
+    configs.rlrp_patience = 3
+    # Model checkpointing
+    configs.checkpoint_filepath = "wandb/model_{epoch}"
+    configs.save_best_only = True
+    # Model evaluation
+    configs.viz_num_images = 100
+    # Use tensorboard
+    configs.use_tensorboard = False
 
     return configs
 

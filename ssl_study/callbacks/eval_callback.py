@@ -1,5 +1,5 @@
 import tensorflow as tf
-from drivable.utils import BaseWandbEvalCallback
+from ssl_study.utils import BaseWandbEvalCallback
 
 import wandb
 

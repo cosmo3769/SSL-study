@@ -26,7 +26,7 @@ class GetDataloader:
 
         # Shuffle if its for training
         if dataloader_type == "train":
-            dataloader = dataloader.shuffle(self.args.dataset_config["batch_size"])
+            dataloader = dataloader.shuffle(self.args.dataset_config.shuffle_buffer)
 
         # Load the image
         dataloader = dataloader.map(
@@ -34,23 +34,24 @@ class GetDataloader:
             num_parallel_calls=AUTOTUNE,
         )
 
-        if self.args.bool_config["do_cache"]:
+        if self.args.dataset_config.do_cache:
             dataloader = dataloader.cache()
 
         # Add augmentation to dataloader for training
-        if self.args.get("train_config", None):
-            if (
-                self.args.bool_config["use_augmentations"]
-                and dataloader_type == "train"
-            ):
-                self.transform = self.build_augmentation()
-                dataloader = dataloader.map(
-                    self.augmentation, num_parallel_calls=AUTOTUNE
-                )
+        if (
+            self.args.dataset_config.use_augmentations
+            and dataloader_type == "train"
+        ):
+            self.transform = self.build_augmentation()
+            dataloader = dataloader.map(
+                self.augmentation, num_parallel_calls=AUTOTUNE
+            )
 
         # Add general stuff
-        dataloader = dataloader.batch(self.args.dataset_config["batch_size"]).prefetch(
-            AUTOTUNE
+        dataloader = (
+            dataloader
+            .batch(self.args.dataset_config.batch_size)
+            .prefetch(AUTOTUNE)
         )
 
         return dataloader
@@ -61,30 +62,25 @@ class GetDataloader:
         # Normalize image
         img = tf.image.convert_image_dtype(img, dtype=tf.float32)
         # resize the image to the desired size
-        if self.args.bool_config["apply_resize"] and dataloader_type == "train":
+        if self.args.dataset_config.apply_resize:
+            if dataloader_type == "train":
+                resize_hw = [
+                    self.args.dataset_config.image_height,
+                    self.args.dataset_config.image_width,
+                ]
+            elif dataloader_type == "valid":
+                resize_hw = [
+                    self.args.train_config.model_img_height,
+                    self.args.train_config.model_img_width,
+                ]
+
             img = tf.image.resize(
                 img,
-                [
-                    self.args.dataset_config["image_height"],
-                    self.args.dataset_config["image_width"],
-                ],
+                resize_hw,
                 method="bicubic",
                 preserve_aspect_ratio=False,
             )
             img = tf.clip_by_value(img, 0.0, 1.0)
-        elif self.args.bool_config["apply_resize"] and dataloader_type == "valid":
-            img = tf.image.resize(
-                img,
-                [
-                    self.args.train_config["model_img_height"],
-                    self.args.train_config["model_img_width"],
-                ],
-                method="bicubic",
-                preserve_aspect_ratio=False,
-            )
-            img = tf.clip_by_value(img, 0.0, 1.0)
-        else:
-            raise NotImplementedError("No data type")
 
         return img
 
@@ -95,8 +91,8 @@ class GetDataloader:
 
         # Parse Target
         label = tf.cast(label, dtype=tf.int64)
-        if self.args.bool_config["apply_one_hot"]:
-            label = tf.one_hot(label, depth=self.args.dataset_config["num_classes"])
+        if self.args.dataset_config.apply_one_hot:
+            label = tf.one_hot(label, depth=self.args.dataset_config.num_classes)
         return image, label
 
     def build_augmentation(self):

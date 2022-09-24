@@ -108,7 +108,7 @@ def main(_):
     model.summary()
 
     # Build the pipeline
-    pipeline = SupervisedPipeline(model, config, class_weights, callbacks)
+    pipeline = SupervisedPipeline(model, config, class_weights, CALLBACKS)
 
     # Train and Evaluate
     pipeline.train_and_evaluate(valid_df, trainloader, validloader)
