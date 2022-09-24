@@ -1,4 +1,5 @@
 import os
+
 import ml_collections
 
 
@@ -9,12 +10,14 @@ def get_wandb_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_dataset_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.batch_size = 64
     configs.num_classes = 200
 
     return configs
+
 
 def get_test_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -25,6 +28,7 @@ def get_test_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_bool_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.apply_resize = True
@@ -32,11 +36,13 @@ def get_bool_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_modelcheckpoint_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.filepath = './best-model'
+    configs.filepath = "./best-model"
 
     return configs
+
 
 # TODO (ayulockin): remove get_config to a different py file
 # and condition it with config_string as referenced here:

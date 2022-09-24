@@ -1,9 +1,11 @@
-import os
 import glob
-import wandb
+import os
 import string
-from typing import Union, Optional, Dict, List
+from typing import Dict, List, Optional, Union
+
 from tensorflow.keras import callbacks
+
+import wandb
 
 
 class WandbModelCheckpoint(callbacks.ModelCheckpoint):

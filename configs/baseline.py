@@ -1,4 +1,5 @@
 import os
+
 import ml_collections
 
 
@@ -9,15 +10,17 @@ def get_wandb_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_dataset_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.image_height = 300 #default - 224
-    configs.image_width = 300 #default - 224
+    configs.image_height = 300  # default - 224
+    configs.image_width = 300  # default - 224
     configs.channels = 3
     configs.batch_size = 64
     configs.num_classes = 200
 
     return configs
+
 
 def get_augmentation_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -25,6 +28,7 @@ def get_augmentation_configs() -> ml_collections.ConfigDict:
     configs.crop_width = 224
 
     return configs
+
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -45,6 +49,7 @@ def get_train_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_bool_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.use_pretrained_weights = True
@@ -62,6 +67,7 @@ def get_bool_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_lr_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.init_lr_rate = 0.001
@@ -72,11 +78,13 @@ def get_lr_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_callback_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.filepath = './best-model'
+    configs.filepath = "./best-model"
 
     return configs
+
 
 # TODO (ayulockin): remove get_config to a different py file
 # and condition it with config_string as referenced here:

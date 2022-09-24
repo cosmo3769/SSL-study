@@ -1,8 +1,10 @@
 import unittest
-from ssl_study.models import SimpleSupervisedModel
+
 from configs import get_config
+from ssl_study.models import SimpleSupervisedModel
 
 args = get_config()
+
 
 class BaselineModelTest(unittest.TestCase):
     def setUp(self):

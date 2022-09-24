@@ -1,16 +1,11 @@
-import wandb
 import tensorflow as tf
 from drivable.utils import BaseWandbEvalCallback
 
+import wandb
+
 
 class WandbClfCallback(BaseWandbEvalCallback):
-    def __init__(
-        self,
-        dataloader,
-        id2label,
-        num_samples=100,
-        is_train=True
-    ):
+    def __init__(self, dataloader, id2label, num_samples=100, is_train=True):
         data_table_columns = ["idx", "ground_truth"]
         pred_table_columns = ["epoch"] + data_table_columns + ["prediction"]
         super().__init__(data_table_columns, pred_table_columns, is_train)
@@ -61,5 +56,8 @@ class WandbClfCallback(BaseWandbEvalCallback):
 
 def get_evaluation_callback(args, dataloader, id2label, is_train=True):
     return WandbSegCallback(
-        dataloader, id2label, num_samples=args.callback_config.viz_num_images, is_train=is_train
+        dataloader,
+        id2label,
+        num_samples=args.callback_config.viz_num_images,
+        is_train=is_train,
     )

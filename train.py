@@ -1,31 +1,34 @@
 # General imports
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import glob
-import wandb
-from absl import app
-from absl import flags
+
 import numpy as np
 import tensorflow as tf
-from wandb.keras import WandbCallback
-from sklearn.utils import class_weight
+from absl import app, flags
 from ml_collections.config_flags import config_flags
+from sklearn.utils import class_weight
 from tensorflow.keras.callbacks import LearningRateScheduler
+from wandb.keras import WandbCallback
 
-# Import modules
-from ssl_study.data import download_dataset, preprocess_dataframe, GetDataloader, preprocess_dataframe
-from ssl_study.models import SimpleSupervisedModel
+import wandb
 from ssl_study.callbacks import GetCallbacks, PolynomialDecay
+# Import modules
+from ssl_study.data import (GetDataloader, download_dataset,
+                            preprocess_dataframe)
+from ssl_study.models import SimpleSupervisedModel
 from ssl_study.pipeline import SupervisedPipeline
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
 
+
 def main(_):
     with wandb.init(
         entity=CONFIG.value.wandb_config.entity,
         project=CONFIG.value.wandb_config.project,
-        job_type='train',
+        job_type="train",
         config=CONFIG.value.to_dict(),
     ):
         # Access all hyperparameter values through wandb.config
@@ -34,8 +37,8 @@ def main(_):
         tf.random.set_seed(config.seed)
 
         # Load the dataframes
-        train_df = download_dataset('train', 'labelled-dataset')
-        valid_df = download_dataset('val', 'labelled-dataset')
+        train_df = download_dataset("train", "labelled-dataset")
+        valid_df = download_dataset("val", "labelled-dataset")
 
         # Preprocess the DataFrames
         train_paths, train_labels = preprocess_dataframe(train_df, is_labelled=True)
@@ -44,15 +47,19 @@ def main(_):
         # Compute class weights if use_class_weights is True.
         class_weights = None
         if config.bool_config["use_class_weights"]:
-            class_weights = class_weight.compute_class_weight(class_weight='balanced', 
-                                  classes=np.unique(train_labels), 
-                                  y=train_labels)
+            class_weights = class_weight.compute_class_weight(
+                class_weight="balanced", classes=np.unique(train_labels), y=train_labels
+            )
             class_weights = dict(zip(np.unique(train_labels), class_weights))
 
         # Build dataloaders
         dataset = GetDataloader(config)
-        trainloader = dataset.dataloader(train_paths, train_labels, dataloader_type='train')
-        validloader = dataset.dataloader(valid_paths, valid_labels, dataloader_type='valid')
+        trainloader = dataset.dataloader(
+            train_paths, train_labels, dataloader_type="train"
+        )
+        validloader = dataset.dataloader(
+            valid_paths, valid_labels, dataloader_type="valid"
+        )
 
         # Build the model
         tf.keras.backend.clear_session()
@@ -61,20 +68,32 @@ def main(_):
 
         # Get learning rate schedulers
         if config.bool_config["use_lr_scheduler"]:
-            schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
+            schedule = PolynomialDecay(
+                maxEpochs=config.train_config["epochs"],
+                init_lr_rate=config.lr_config["init_lr_rate"],
+                power=5,
+            )
 
         # Build callbacks
         callback = GetCallbacks(config)
         if config.bool_config["save_model"]:
-            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule), callback.get_model_checkpoint()]
+            callbacks = [
+                WandbCallback(save_model=False),
+                LearningRateScheduler(schedule),
+                callback.get_model_checkpoint(),
+            ]
         else:
-            callbacks = [WandbCallback(save_model=False), LearningRateScheduler(schedule)]
-        
+            callbacks = [
+                WandbCallback(save_model=False),
+                LearningRateScheduler(schedule),
+            ]
+
         # Build the pipeline
         pipeline = SupervisedPipeline(model, config, class_weights, callbacks)
 
         # Train and Evaluate
         pipeline.train_and_evaluate(valid_df, trainloader, validloader)
+
 
 if __name__ == "__main__":
     app.run(main)

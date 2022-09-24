@@ -1,7 +1,9 @@
-import wandb
-from typing import List, Dict
 import abc
+from typing import Dict, List
+
 from tensorflow.keras.callbacks import Callback
+
+import wandb
 
 
 class BaseWandbEvalCallback(Callback, metaclass=abc.ABCMeta):
@@ -88,7 +90,7 @@ class BaseWandbEvalCallback(Callback, metaclass=abc.ABCMeta):
         self,
         data_table_columns=List[str],
         pred_table_columns=List[str],
-        is_train:bool=True,
+        is_train: bool = True,
         *args,
         **kwargs,
     ):
@@ -194,7 +196,10 @@ class BaseWandbEvalCallback(Callback, metaclass=abc.ABCMeta):
         self.pred_table = wandb.Table(columns=column_names)
 
     def log_data_table(
-        self, name: str = "val_data", type: str = "eval_dataset", table_name: str = "val_data"
+        self,
+        name: str = "val_data",
+        type: str = "eval_dataset",
+        table_name: str = "val_data",
     ):
         """Log the `data_table` as W&B artifact and call
         `use_artifact` on it so that the evaluation table can use the reference

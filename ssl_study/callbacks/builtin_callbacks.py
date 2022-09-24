@@ -1,6 +1,8 @@
 import os
-import wandb
+
 import tensorflow as tf
+
+import wandb
 
 
 def get_earlystopper(args):

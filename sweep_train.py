@@ -1,41 +1,45 @@
 # General imports
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import glob
-import wandb
-from absl import app
-from absl import flags
+
 import numpy as np
 import tensorflow as tf
-from wandb.keras import WandbCallback
-from sklearn.utils import class_weight
-from ml_collections.config_flags import config_flags
-from tensorflow.keras.callbacks import LearningRateScheduler
-
-# Import modules
-from data import download_dataset, preprocess_dataset, GetDataloader
-from models import SimpleSupervisedModel
+from absl import app, flags
 from callbacks import GetCallbacks, PolynomialDecay
+# Import modules
+from data import GetDataloader, download_dataset, preprocess_dataset
+from ml_collections.config_flags import config_flags
+from models import SimpleSupervisedModel
 from pipeline import SupervisedPipeline
+from sklearn.utils import class_weight
+from tensorflow.keras.callbacks import LearningRateScheduler
+from wandb.keras import WandbCallback
+
+import wandb
 from configs.config import get_config
 
 # Access all hyperparameter values through ml collection config
 config = get_config()
 
 # Initialize wandb
-wandb.init(config=config.to_dict(),
-           entity=config.wandb_config.entity, 
-           project=config.wandb_config.project)
+wandb.init(
+    config=config.to_dict(),
+    entity=config.wandb_config.entity,
+    project=config.wandb_config.project,
+)
 # Access all hyperparameter values through wandb.config
 config = wandb.config
+
 
 def main():
     # Seed Everything
     tf.random.set_seed(config.seed)
 
     # Load the dataframes
-    train_df = download_dataset('train', 'labelled-dataset')
-    valid_df = download_dataset('val', 'labelled-dataset')
+    train_df = download_dataset("train", "labelled-dataset")
+    valid_df = download_dataset("val", "labelled-dataset")
 
     # Preprocess the DataFrames
     train_paths, train_labels = preprocess_dataset(train_df)
@@ -44,15 +48,15 @@ def main():
     # Compute class weights if use_class_weights is True.
     class_weights = None
     if config.train_config["use_class_weights"]:
-        class_weights = class_weight.compute_class_weight(class_weight='balanced', 
-                              classes=np.unique(train_labels), 
-                              y=train_labels)
+        class_weights = class_weight.compute_class_weight(
+            class_weight="balanced", classes=np.unique(train_labels), y=train_labels
+        )
         class_weights = dict(zip(np.unique(train_labels), class_weights))
 
     # Build dataloaders
     dataset = GetDataloader(config)
-    trainloader = dataset.dataloader(train_paths, train_labels, dataloader_type='train')
-    validloader = dataset.dataloader(valid_paths, valid_labels, dataloader_type='valid')
+    trainloader = dataset.dataloader(train_paths, train_labels, dataloader_type="train")
+    validloader = dataset.dataloader(valid_paths, valid_labels, dataloader_type="valid")
 
     # Build the model
     tf.keras.backend.clear_session()
@@ -61,7 +65,11 @@ def main():
 
     # Get learning rate schedulers
     if config.train_config["use_lr_scheduler"]:
-        schedule = PolynomialDecay(maxEpochs=config.train_config["epochs"], init_lr_rate=config.lr_config["init_lr_rate"], power=5)
+        schedule = PolynomialDecay(
+            maxEpochs=config.train_config["epochs"],
+            init_lr_rate=config.lr_config["init_lr_rate"],
+            power=5,
+        )
 
     # Build callbacks
     # callback = GetCallbacks(config)
@@ -72,5 +80,6 @@ def main():
 
     # Train and Evaluate
     pipeline.train_and_evaluate(valid_df, trainloader, validloader)
+
 
 main()
