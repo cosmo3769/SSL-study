@@ -29,9 +29,14 @@ To train the supervised pipeline that trains a baseline image classifier using l
 
 `python train.py --config configs/baseline.py`
 
+* `--wandb`: Use this flag to log the metrics to Weights and Biases
+* `--log_model`: Use this flag for model checkpointing. The checkpoints are logged to W&B Artifacts.
+* `--log_eval`: Use this flag to log model prediction using W&B Tables.
+
 To test your trained model, run: 
 
 `python test.py --config configs/test_config.py`
+
 
 ### Sweeps
 
