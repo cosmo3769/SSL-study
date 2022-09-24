@@ -11,7 +11,7 @@ class GetDataloader:
     def __init__(self, args):
         self.args = args
 
-    def dataloader(self, paths, labels, dataloader_type="train"):
+    def get_dataloader(self, paths, labels, dataloader_type="train"):
         """
         Args:
             paths: List of strings, where each string is path to the image.
