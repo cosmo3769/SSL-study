@@ -13,7 +13,7 @@ from ml_collections.config_flags import config_flags
 from tensorflow.keras.callbacks import LearningRateScheduler
 
 # Import modules
-from ssl_study.data import download_dataset, preprocess_dataframe_labelled, GetDataloader, preprocess_dataframe
+from ssl_study.data import download_dataset, preprocess_dataframe, GetDataloader, preprocess_dataframe
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.callbacks import GetCallbacks, PolynomialDecay
 from ssl_study.pipeline import SupervisedPipeline
