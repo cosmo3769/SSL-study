@@ -42,7 +42,7 @@ def get_train_configs() -> ml_collections.ConfigDict:
     configs.model_img_width = 224
     configs.model_img_channels = 3
     configs.backbone = "resnet50"
-    configs.epochs = 3
+    configs.epochs = 1
     configs.l2_regularizer = 0.0001
     configs.dropout_rate = 0.5
     configs.optimizer = "sgd"

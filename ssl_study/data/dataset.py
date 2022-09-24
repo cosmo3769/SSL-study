@@ -76,9 +76,8 @@ def download_dataset(
                 df_data += [example[2]]
             data_df.loc[idx] = df_data
 
-    # Shuffle the dataframe
-    if dataset_name == "train":
-        data_df = data_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    # Shuffle the dataframe only once.
+    data_df = data_df.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # Save the dataframes as csv
     if dataset_name == "train" and not os.path.exists(save_at + "train.csv"):

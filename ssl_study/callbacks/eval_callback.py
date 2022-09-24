@@ -1,63 +1,45 @@
 import tensorflow as tf
-from ssl_study.utils import BaseWandbEvalCallback
 
 import wandb
+from ssl_study.utils import BaseWandbEvalCallback
 
 
 class WandbClfCallback(BaseWandbEvalCallback):
-    def __init__(self, dataloader, id2label, num_samples=100, is_train=True):
-        data_table_columns = ["idx", "ground_truth"]
+    def __init__(self, args, dataloader, is_train=True):
+        data_table_columns = ["idx", "image", "ground_truth"]
         pred_table_columns = ["epoch"] + data_table_columns + ["prediction"]
         super().__init__(data_table_columns, pred_table_columns, is_train)
 
+        self.args = args
         # Make unbatched iterator from `tf.data.Dataset`.
-        self.val_ds = dataloader.unbatch().take(num_samples)
-        self.id2label = id2label
+        self.val_ds = dataloader.unbatch().take(self.args.callback_config.viz_num_images)
 
     def add_ground_truth(self, logs):
-        for idx, (image, mask) in enumerate(self.val_ds.as_numpy_iterator()):
-            self.data_table.add_data(
-                idx,
-                wandb.Image(
-                    image,
-                    masks={
-                        "ground_truth": {
-                            "mask_data": tf.squeeze(mask, axis=-1).numpy(),
-                            "class_labels": self.id2label,
-                        }
-                    },
-                ),
-            )
+        for idx, (image, label) in enumerate(self.val_ds.as_numpy_iterator()):
+            if self.args.dataset_config.apply_one_hot:
+                label = tf.argmax(label, axis=-1)
+            self.data_table.add_data(idx, wandb.Image(image), label)
 
     def add_model_predictions(self, epoch, logs):
         data_table_ref = self.data_table_ref
         table_idxs = data_table_ref.get_index()
 
-        for idx, (image, mask) in enumerate(self.val_ds.as_numpy_iterator()):
+        for idx, (image, label) in enumerate(self.val_ds.as_numpy_iterator()):
             pred = self.model.predict(tf.expand_dims(image, axis=0), verbose=0)
             pred = tf.squeeze(tf.argmax(pred, axis=-1), axis=0)
 
-            pred_wandb_mask = wandb.Image(
-                image,
-                masks={
-                    "prediction": {
-                        "mask_data": pred.numpy(),
-                        "class_labels": self.id2label,
-                    }
-                },
-            )
             self.pred_table.add_data(
                 epoch,
                 data_table_ref.data[idx][0],
                 data_table_ref.data[idx][1],
-                pred_wandb_mask,
+                data_table_ref.data[idx][2],
+                pred,
             )
 
 
-def get_evaluation_callback(args, dataloader, id2label, is_train=True):
-    return WandbSegCallback(
+def get_evaluation_callback(args, dataloader, is_train=True):
+    return WandbClfCallback(
+        args,
         dataloader,
-        id2label,
-        num_samples=args.callback_config.viz_num_images,
         is_train=is_train,
     )

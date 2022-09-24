@@ -12,15 +12,10 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import load_model
 
 import wandb
-
 # Import modules
-from ssl_study.data import (
-    GetDataloader,
-    GetTestDataloader,
-    download_dataset,
-    preprocess_dataframe,
-    preprocess_dataframe_unlabelled,
-)
+from ssl_study.data import (GetDataloader, GetTestDataloader, download_dataset,
+                            preprocess_dataframe,
+                            preprocess_dataframe_unlabelled)
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")

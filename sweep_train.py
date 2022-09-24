@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from absl import app, flags
 from callbacks import GetCallbacks, PolynomialDecay
-
 # Import modules
 from data import GetDataloader, download_dataset, preprocess_dataset
 from ml_collections.config_flags import config_flags

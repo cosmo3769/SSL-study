@@ -14,9 +14,9 @@ from wandb.keras import WandbCallback
 
 import wandb
 from ssl_study import callbacks
-
 # Import modules
-from ssl_study.data import GetDataloader, download_dataset, preprocess_dataframe
+from ssl_study.data import (GetDataloader, download_dataset,
+                            preprocess_dataframe)
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.pipeline import SupervisedPipeline
 
@@ -94,9 +94,7 @@ def main(_):
 
     if wandb.run is not None:
         if FLAGS.log_eval:
-            model_pred_viz = callbacks.get_evaluation_callback(
-                config, validloader, DRIVABLE_SEG_MAP
-            )
+            model_pred_viz = callbacks.get_evaluation_callback(config, validloader)
             CALLBACKS += [model_pred_viz]
 
     if callback_config.use_tensorboard:

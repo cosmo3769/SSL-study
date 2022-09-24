@@ -38,20 +38,13 @@ class GetDataloader:
             dataloader = dataloader.cache()
 
         # Add augmentation to dataloader for training
-        if (
-            self.args.dataset_config.use_augmentations
-            and dataloader_type == "train"
-        ):
+        if self.args.dataset_config.use_augmentations and dataloader_type == "train":
             self.transform = self.build_augmentation()
-            dataloader = dataloader.map(
-                self.augmentation, num_parallel_calls=AUTOTUNE
-            )
+            dataloader = dataloader.map(self.augmentation, num_parallel_calls=AUTOTUNE)
 
         # Add general stuff
-        dataloader = (
-            dataloader
-            .batch(self.args.dataset_config.batch_size)
-            .prefetch(AUTOTUNE)
+        dataloader = dataloader.batch(self.args.dataset_config.batch_size).prefetch(
+            AUTOTUNE
         )
 
         return dataloader
