@@ -13,12 +13,12 @@ from tensorflow.keras.callbacks import LearningRateScheduler
 from wandb.keras import WandbCallback
 
 import wandb
+from ssl_study import callbacks
+
 # Import modules
-from ssl_study.data import (GetDataloader, download_dataset,
-                            preprocess_dataframe)
+from ssl_study.data import GetDataloader, download_dataset, preprocess_dataframe
 from ssl_study.models import SimpleSupervisedModel
 from ssl_study.pipeline import SupervisedPipeline
-from ssl_study import callbacks
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -45,11 +45,10 @@ def main(_):
             project=CONFIG.value.wandb_config.project,
             job_type="train",
             config=config.to_dict(),
-            sync_tensorboard=sync_tensorboard
+            sync_tensorboard=sync_tensorboard,
         )
         # Initialize W&B metrics logger callback.
         CALLBACKS += [callbacks.WandBMetricsLogger()]
-
 
     # Load the dataframes
     train_df = download_dataset("train", "labelled-dataset")
