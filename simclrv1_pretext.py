@@ -54,6 +54,10 @@ def main(_):
     # Preprocess the DataFrames
     inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
 
+    # Build dataloaders
+    dataset = GetDataloader(config)
+    inclassloader = dataset.get_dataloader(inclass_paths)
+
 
 if __name__ == "__main__":
     app.run(main)
