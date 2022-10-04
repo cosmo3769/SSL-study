@@ -15,8 +15,9 @@ from wandb.keras import WandbCallback
 import wandb
 from ssl_study import callbacks
 # Import modules
-from ssl_study.data import (GetDataloader, download_dataset,
+from ssl_study.data import (download_dataset,
                             preprocess_dataframe)
+from ssl_study.simclrv1.pretext.data import GetDataloader
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")

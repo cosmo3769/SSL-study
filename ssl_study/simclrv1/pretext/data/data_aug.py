@@ -13,13 +13,11 @@ class Augment():
           mode='torch')
 
 
-    @tf.function
-    def simclr_augmenter(self, img, blur=True, area_range=(0.2, 1.0)):
+    # @tf.function
+    def simclr_augmenter(self, img):
         """
         args:
             img: Single image tensor of shape (H, W, C)
-            blur: If true, apply blur. Should be disabled for cifar10.
-            area_range: The upper and lower bound of the random crop percentage.
 
         returns:
             A single image tensor of shape (H, W, C) with values between 0.0 and 1.0.
@@ -31,7 +29,7 @@ class Augment():
         )
         
         # The following transforms expect the data to be [0, 1]
-        img /= 255.
+        # img /= 255.
         
         # random color jitter
         def _jitter_transform(x):
@@ -59,17 +57,17 @@ class Augment():
         img = tf.image.random_flip_left_right(img)
         
         # scale the data back to [0, 255]
-        img = img * 255.
-        img = tf.clip_by_value(img, 0., 255.)
+        # img = img * 255.
+        # img = tf.clip_by_value(img, 0., 255.)
 
         return img
 
 
-    @tf.function()
+    # @tf.function()
     def process(self, img):
-        view1 = self.simclr_augmenter(img, blur=False)
+        view1 = self.simclr_augmenter(img)
         view1 = self.img_scaling(view1)
-        view2 = self.simclr_augmenter(img, blur=False)
+        view2 = self.simclr_augmenter(img)
         view2 = self.img_scaling(view2)
         
         return (view1, view2)

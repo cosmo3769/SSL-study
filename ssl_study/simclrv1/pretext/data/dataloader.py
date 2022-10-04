@@ -27,7 +27,7 @@ class GetDataloader():
         )
 
         # augmented view(2 views of same example in a batch)
-        augment = Augment(config).process()
+        augment = Augment(self.args).process(dataloader)
         dataloader = dataloader.map(augment, num_parallel_calls=AUTOTUNE)
 
 
@@ -55,6 +55,6 @@ class GetDataloader():
                                       self.args.dataset_config.image_width],
                                       method='bicubic', 
                                       preserve_aspect_ratio=False)
-            # image = tf.clip_by_value(image, 0.0, 1.0)
+            image = tf.clip_by_value(image, 0.0, 1.0)
 
         return image
