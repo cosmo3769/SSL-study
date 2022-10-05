@@ -47,9 +47,8 @@ def get_bool_configs() -> ml_collections.ConfigDict:
 def get_model_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.backbone = "resnet50"
-    configs.hidden1 = 256
-    configs.hidden2 = 128
-    configs.hidden3 = 50
+    configs.projection_DIM = 2048
+    configs.projection_layers = 2
 
     return configs
 

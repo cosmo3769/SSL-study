@@ -14,10 +14,12 @@ from wandb.keras import WandbCallback
 
 import wandb
 from ssl_study import callbacks
+
 # Import modules
 from ssl_study.data import (download_dataset,
                             preprocess_dataframe)
 from ssl_study.simclrv1.pretext.data import GetDataloader
+from ssl_study.simclrv1.pretext.models import SimCLRv1Model
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -31,7 +33,6 @@ flags.DEFINE_bool(
 def main(_):
     # Get configs from the config file.
     config = CONFIG.value
-    print(config)
 
     CALLBACKS = []
     sync_tensorboard = None
@@ -58,6 +59,13 @@ def main(_):
     # Build dataloaders
     dataset = GetDataloader(config)
     inclassloader = dataset.get_dataloader(inclass_paths)
+
+    # Model 
+    tf.keras.backend.clear_session()
+    backbone = SimCLRv1Model(config).get_backbone()
+    backbone.summary()
+    projector = SimCLRv1Model(config).get_projector(input_dim=backbone.output.shape[-1], dim=config.model_config.projection_DIM, num_layers=config.model_config.projection_layers)
+    projector.summary()
 
 
 if __name__ == "__main__":
