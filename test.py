@@ -6,12 +6,12 @@ import glob
 
 import numpy as np
 import tensorflow as tf
+import wandb
 from absl import app, flags
 from ml_collections.config_flags import config_flags
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import load_model
 
-import wandb
 # Import modules
 from ssl_study.data import (GetDataloader, GetTestDataloader, download_dataset,
                             preprocess_dataframe,

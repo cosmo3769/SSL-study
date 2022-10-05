@@ -3,9 +3,8 @@ import os
 import string
 from typing import Dict, List, Optional, Union
 
-from tensorflow.keras import callbacks
-
 import wandb
+from tensorflow.keras import callbacks
 
 
 class WandbModelCheckpoint(callbacks.ModelCheckpoint):

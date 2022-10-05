@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow_similarity as tfsim
 
+
 # Sanity Check
 class ShowAugmentedBatch:
     """
@@ -24,6 +25,3 @@ class ShowAugmentedBatch:
             max_pixel_value=max_pixel,
             min_pixel_value=min_pixel,
         )
-
-
-

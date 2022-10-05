@@ -6,19 +6,17 @@ import glob
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_similarity as tfsim
+import wandb
 from absl import app, flags
 from ml_collections.config_flags import config_flags
 from sklearn.utils import class_weight
 from tensorflow.keras.callbacks import LearningRateScheduler
 from wandb.keras import WandbCallback
-import tensorflow_similarity as tfsim
 
-import wandb
 from ssl_study import callbacks
-
 # Import modules
-from ssl_study.data import (download_dataset,
-                            preprocess_dataframe)
+from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.pretext.data import GetDataloader
 from ssl_study.simclrv1.pretext.models import SimCLRv1Model
 from ssl_study.simclrv1.pretext.pipeline import SimCLRv1Pipeline
@@ -53,7 +51,7 @@ def main(_):
         CALLBACKS += [callbacks.WandBMetricsLogger()]
 
     # Load the Dataframes
-    inclass_df = download_dataset('in-class', 'unlabelled-dataset')
+    inclass_df = download_dataset("in-class", "unlabelled-dataset")
 
     # Preprocess the DataFrames
     inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
@@ -62,11 +60,15 @@ def main(_):
     dataset = GetDataloader(config)
     inclassloader = dataset.get_dataloader(inclass_paths)
 
-    # Model 
+    # Model
     tf.keras.backend.clear_session()
     backbone = SimCLRv1Model(config).get_backbone()
     backbone.summary()
-    projector = SimCLRv1Model(config).get_projector(input_dim=backbone.output.shape[-1], dim=config.model_config.projection_DIM, num_layers=config.model_config.projection_layers)
+    projector = SimCLRv1Model(config).get_projector(
+        input_dim=backbone.output.shape[-1],
+        dim=config.model_config.projection_DIM,
+        num_layers=config.model_config.projection_layers,
+    )
     projector.summary()
     contrastive_model = tfsim.models.ContrastiveModel(
         backbone=backbone,

@@ -3,9 +3,8 @@ import json
 import os
 
 import pandas as pd
-from tqdm import tqdm
-
 import wandb
+from tqdm import tqdm
 
 
 def download_dataset(
@@ -37,10 +36,10 @@ def download_dataset(
         data_df = pd.read_csv(save_at + "valid.csv")
     elif dataset_name == "test" and os.path.exists(save_at + "test.csv"):
         data_df = pd.read_csv(save_at + "test.csv")
-    elif dataset_name == 'in-class' and os.path.exists(save_at+'in-class.csv'):
-        data_df = pd.read_csv(save_at+'in-class.csv')
-    elif dataset_name == 'out-class' and os.path.exists(save_at+'out-class.csv'):
-        data_df = pd.read_csv(save_at+'out-class.csv')
+    elif dataset_name == "in-class" and os.path.exists(save_at + "in-class.csv"):
+        data_df = pd.read_csv(save_at + "in-class.csv")
+    elif dataset_name == "out-class" and os.path.exists(save_at + "out-class.csv"):
+        data_df = pd.read_csv(save_at + "out-class.csv")
     else:
         data_df = None
         print("Downloading dataset...")
@@ -81,7 +80,7 @@ def download_dataset(
             data_df.loc[idx] = df_data
 
     # Shuffle only train dataframe
-    if dataset_name == 'train':
+    if dataset_name == "train":
         data_df = data_df.sample(frac=1, random_state=42).reset_index(drop=True)
 
     # Save the dataframes as csv
@@ -94,11 +93,11 @@ def download_dataset(
     if dataset_name == "test" and not os.path.exists(save_at + "test.csv"):
         data_df.to_csv(save_at + "test.csv", index=False)
 
-    if dataset_name == 'in-class' and not os.path.exists(save_at+'in-class.csv'):
-        data_df.to_csv(save_at+'in-class.csv', index=False)
+    if dataset_name == "in-class" and not os.path.exists(save_at + "in-class.csv"):
+        data_df.to_csv(save_at + "in-class.csv", index=False)
 
-    if dataset_name == 'out-class' and not os.path.exists(save_at+'out-class.csv'):
-        data_df.to_csv(save_at+'out-class.csv', index=False)
+    if dataset_name == "out-class" and not os.path.exists(save_at + "out-class.csv"):
+        data_df.to_csv(save_at + "out-class.csv", index=False)
 
     return data_df
 

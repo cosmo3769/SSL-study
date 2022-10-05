@@ -6,13 +6,13 @@ import glob
 
 import numpy as np
 import tensorflow as tf
+import wandb
 from absl import app, flags
 from ml_collections.config_flags import config_flags
 from sklearn.utils import class_weight
 from tensorflow.keras.callbacks import LearningRateScheduler
 from wandb.keras import WandbCallback
 
-import wandb
 from ssl_study import callbacks
 # Import modules
 from ssl_study.data import (GetDataloader, download_dataset,

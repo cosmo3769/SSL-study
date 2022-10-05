@@ -4,11 +4,10 @@ import tempfile
 
 import numpy as np
 import tensorflow as tf
+import wandb
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import save_model
 from tqdm import tqdm
-
-import wandb
 
 
 class SupervisedPipeline:

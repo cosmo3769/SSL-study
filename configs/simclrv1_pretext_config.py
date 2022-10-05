@@ -1,5 +1,7 @@
 import os
+
 import ml_collections
+
 
 def get_wandb_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -8,20 +10,22 @@ def get_wandb_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_dataset_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.image_height = 224 #default - 224
-    configs.image_width = 224 #default - 224
+    configs.image_height = 224  # default - 224
+    configs.image_width = 224  # default - 224
     configs.channels = 3
     configs.batch_size = 64
     configs.num_classes = 200
 
     return configs
 
+
 def get_augment_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.image_height = 224 #default - 224
-    configs.image_width = 224 #default - 224
+    configs.image_height = 224  # default - 224
+    configs.image_width = 224  # default - 224
     configs.crop_resize_area = (0.2, 1.0)
     configs.cropscale = (0.08, 1.0)
     configs.cropratio = (0.75, 1.3333333333333333)
@@ -36,6 +40,7 @@ def get_augment_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_bool_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.apply_resize = True
@@ -43,6 +48,7 @@ def get_bool_configs() -> ml_collections.ConfigDict:
     configs.use_cosine_similarity = True
 
     return configs
+
 
 def get_model_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -52,14 +58,16 @@ def get_model_configs() -> ml_collections.ConfigDict:
 
     return configs
 
+
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.epochs = 50
     configs.temperature = 0.5
-    configs.s = 1 
+    configs.s = 1
     configs.optimizer = "LAMB"
 
     return configs
+
 
 def get_callback_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
@@ -80,11 +88,13 @@ def get_callback_configs() -> ml_collections.ConfigDict:
 
     return configs
 
-def get_lr_configs() -> ml_collections.ConfigDict: 
+
+def get_lr_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
     configs.init_lr_rate = 1e-3
 
     return configs
+
 
 def get_config() -> ml_collections.ConfigDict:
     config = ml_collections.ConfigDict()

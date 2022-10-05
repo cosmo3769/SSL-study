@@ -4,13 +4,12 @@ import tempfile
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_addons as tfa
+import tensorflow_similarity as tfsim
+import wandb
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import save_model
 from tqdm import tqdm
-import tensorflow_addons as tfa
-import tensorflow_similarity as tfsim
-
-import wandb
 
 
 class SimCLRv1Pipeline:
@@ -18,7 +17,7 @@ class SimCLRv1Pipeline:
         self.args = args
         self.model = model
 
-    def train_and_evaluate(self, inclass_paths ,inclassloader):
+    def train_and_evaluate(self, inclass_paths, inclassloader):
         # Optimizer
         if self.args.train_config.optimizer == "adam":
             optimizer = tf.keras.optimizers.Adam(self.args.lr_config.init_lr_rate)
@@ -28,18 +27,19 @@ class SimCLRv1Pipeline:
                 self.args.train_config.sgd_momentum,
             )
         elif self.args.train_config.optimizer == "LAMB":
-            optimizer = tfa.optimizers.LAMB(learning_rate=self.args.lr_config.init_lr_rate)
+            optimizer = tfa.optimizers.LAMB(
+                learning_rate=self.args.lr_config.init_lr_rate
+            )
         else:
             raise NotImplementedError("This optimizer is not implemented.")
 
         # Loss
-        loss = tfsim.losses.SimCLRLoss(name="simclr", temperature=self.args.train_config.temperature)
+        loss = tfsim.losses.SimCLRLoss(
+            name="simclr", temperature=self.args.train_config.temperature
+        )
 
         # Compile
-        self.model.compile(
-            optimizer=optimizer,
-            loss=loss
-        )
+        self.model.compile(optimizer=optimizer, loss=loss)
 
         # Train
         self.model.fit(

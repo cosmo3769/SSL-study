@@ -1,7 +1,8 @@
 import tensorflow as tf
 import tensorflow_similarity as tfsim
 
-class SimCLRv1Model():
+
+class SimCLRv1Model:
     def __init__(self, args):
         self.args = args
 
@@ -9,9 +10,10 @@ class SimCLRv1Model():
         input_shape = (
             self.args.dataset_config.image_height,
             self.args.dataset_config.image_width,
-            self.args.dataset_config.channels)
-            
-        if self.args.model_config.backbone == 'resnet50':
+            self.args.dataset_config.channels,
+        )
+
+        if self.args.model_config.backbone == "resnet50":
             backbone = tfsim.architectures.ResNet50Sim(
                 input_shape,
                 include_top=False,  # Take the pooling layer as the output.
@@ -19,7 +21,7 @@ class SimCLRv1Model():
             )
         else:
             raise NotImplementedError("Not implemented for this backbone.")
-        
+
         return backbone
 
     def get_projector(self, input_dim, dim, activation="relu", num_layers: int = 3):
@@ -33,8 +35,12 @@ class SimCLRv1Model():
                 kernel_initializer=tf.keras.initializers.LecunUniform(),
                 name=f"projector_layer_{i}",
             )(x)
-            x = tf.keras.layers.BatchNormalization(epsilon=1.001e-5, name=f"batch_normalization_{i}")(x)
-            x = tf.keras.layers.Activation(activation, name=f"{activation}_activation_{i}")(x)
+            x = tf.keras.layers.BatchNormalization(
+                epsilon=1.001e-5, name=f"batch_normalization_{i}"
+            )(x)
+            x = tf.keras.layers.Activation(
+                activation, name=f"{activation}_activation_{i}"
+            )(x)
         x = tf.keras.layers.Dense(
             dim,
             use_bias=False,

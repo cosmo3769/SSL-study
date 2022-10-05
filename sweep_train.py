@@ -6,6 +6,7 @@ import glob
 
 import numpy as np
 import tensorflow as tf
+import wandb
 from absl import app, flags
 from callbacks import GetCallbacks, PolynomialDecay
 # Import modules
@@ -17,7 +18,6 @@ from sklearn.utils import class_weight
 from tensorflow.keras.callbacks import LearningRateScheduler
 from wandb.keras import WandbCallback
 
-import wandb
 from configs.config import get_config
 
 # Access all hyperparameter values through ml collection config
