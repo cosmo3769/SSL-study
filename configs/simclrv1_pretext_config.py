@@ -54,14 +54,14 @@ def get_model_configs() -> ml_collections.ConfigDict:
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.epochs = 30
+    configs.epochs = 50
     configs.temperature = 0.5
     configs.s = 1 
+    configs.optimizer = "LAMB"
 
     return configs
 
 def get_callback_configs() -> ml_collections.ConfigDict:
-    configs = ml_collections.ConfigDict()
     configs = ml_collections.ConfigDict()
     # Early stopping
     configs.use_earlystopping = True
@@ -79,7 +79,13 @@ def get_callback_configs() -> ml_collections.ConfigDict:
     configs.use_tensorboard = False
 
     return configs
-    
+
+def get_lr_configs() -> ml_collections.ConfigDict: 
+    configs = ml_collections.ConfigDict()
+    configs.init_lr_rate = 1e-3
+
+    return configs
+
 def get_config() -> ml_collections.ConfigDict:
     config = ml_collections.ConfigDict()
     config.seed = 0
@@ -90,5 +96,6 @@ def get_config() -> ml_collections.ConfigDict:
     config.model_config = get_model_configs()
     config.train_config = get_train_configs()
     config.callback_config = get_callback_configs()
+    config.lr_config = get_lr_configs()
 
     return config

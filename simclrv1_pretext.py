@@ -11,6 +11,7 @@ from ml_collections.config_flags import config_flags
 from sklearn.utils import class_weight
 from tensorflow.keras.callbacks import LearningRateScheduler
 from wandb.keras import WandbCallback
+import tensorflow_similarity as tfsim
 
 import wandb
 from ssl_study import callbacks
@@ -20,6 +21,7 @@ from ssl_study.data import (download_dataset,
                             preprocess_dataframe)
 from ssl_study.simclrv1.pretext.data import GetDataloader
 from ssl_study.simclrv1.pretext.models import SimCLRv1Model
+from ssl_study.simclrv1.pretext.pipeline import SimCLRv1Pipeline
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -66,6 +68,17 @@ def main(_):
     backbone.summary()
     projector = SimCLRv1Model(config).get_projector(input_dim=backbone.output.shape[-1], dim=config.model_config.projection_DIM, num_layers=config.model_config.projection_layers)
     projector.summary()
+    contrastive_model = tfsim.models.ContrastiveModel(
+        backbone=backbone,
+        projector=projector,
+        algorithm="simclr",
+    )
+
+    # Build the pipeline
+    pipeline = SimCLRv1Pipeline(contrastive_model, config)
+
+    # Train and Evaluate
+    pipeline.train_and_evaluate(inclass_paths, inclassloader)
 
 
 if __name__ == "__main__":
