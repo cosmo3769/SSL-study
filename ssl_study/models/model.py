@@ -4,9 +4,8 @@ import tempfile
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers, models, regularizers
-
 import wandb
+from tensorflow.keras import layers, models, regularizers
 
 
 def regularize_backbone(model, regularizer=tf.keras.regularizers.l2(0.0001)):

@@ -1,8 +1,7 @@
 from typing import Optional
 
-from tensorflow.keras import callbacks
-
 import wandb
+from tensorflow.keras import callbacks
 
 
 class WandBMetricsLogger(callbacks.Callback):

@@ -1,9 +1,8 @@
 import abc
 from typing import Dict, List
 
-from tensorflow.keras.callbacks import Callback
-
 import wandb
+from tensorflow.keras.callbacks import Callback
 
 
 class BaseWandbEvalCallback(Callback, metaclass=abc.ABCMeta):

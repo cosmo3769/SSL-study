@@ -2,3 +2,5 @@ wandb
 ml-collections
 albumentations
 tensorflow==2.8.2
+tensorflow_similarity
+tensorflow-addons

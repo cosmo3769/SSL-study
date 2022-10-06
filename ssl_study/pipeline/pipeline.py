@@ -4,11 +4,10 @@ import tempfile
 
 import numpy as np
 import tensorflow as tf
+import wandb
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import save_model
 from tqdm import tqdm
-
-import wandb
 
 
 class SupervisedPipeline:
@@ -19,7 +18,7 @@ class SupervisedPipeline:
         self.callbacks = callbacks
 
     def train_and_evaluate(self, valid_df, trainloader, validloader):
-        # Compile model
+        # Optimizer
         if self.args.train_config.optimizer == "adam":
             optimizer = tf.keras.optimizers.Adam(self.args.lr_config.init_lr_rate)
         elif self.args.train_config.optimizer == "sgd":
@@ -30,7 +29,7 @@ class SupervisedPipeline:
         else:
             raise NotImplementedError("This optimizer is not implemented.")
 
-        # Train
+        # Compile
         self.model.compile(
             optimizer,
             loss=self.args.train_config.loss,
@@ -40,6 +39,7 @@ class SupervisedPipeline:
             ],
         )
 
+        # Train
         self.model.fit(
             trainloader,
             class_weight=self.class_weights,

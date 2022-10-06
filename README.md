@@ -53,6 +53,10 @@ To test your trained model, run:
 
 To run a particular test: `python -m unittest tests/test_*.py`
 
+### SimCLRv1 pretrain
+
+Run: `python simclrv1_pretext.py --config configs/simclrv1_pretext_config.py`
+
 # Citations
 
 ```
