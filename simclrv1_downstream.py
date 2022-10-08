@@ -17,6 +17,7 @@ from wandb.keras import WandbCallback
 from ssl_study import callbacks
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataframe
+from ssl_study.simclrv1.downstream.data import GetDataloader
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -54,6 +55,15 @@ def main(_):
     # Preprocess the DataFrames
     train_paths, train_labels = preprocess_dataframe(train_df, is_labelled=True)
     valid_paths, valid_labels = preprocess_dataframe(valid_df, is_labelled=True)
+
+    # Build dataloaders
+    dataset = GetDataloader(config)
+    trainloader = dataset.get_dataloader(
+        train_paths, train_labels, dataloader_type="train"
+    )
+    validloader = dataset.get_dataloader(
+        valid_paths, valid_labels, dataloader_type="valid"
+    )
 
 if __name__ == "__main__":
     app.run(main)

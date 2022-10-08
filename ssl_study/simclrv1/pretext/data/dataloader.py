@@ -33,7 +33,7 @@ class GetDataloader:
 
         # Add general stuff
         dataloader = (
-            dataloader.shuffle(self.args.dataset_config.batch_size)
+            dataloader.shuffle(self.args.dataset_config.shuffle_buffer)
             .batch(self.args.dataset_config.batch_size)
             .prefetch(AUTOTUNE)
         )
