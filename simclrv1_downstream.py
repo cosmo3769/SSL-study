@@ -18,6 +18,9 @@ from ssl_study import callbacks
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.downstream.data import GetDataloader
+from ssl_study.simclrv1.downstream.models import download_model
+from ssl_study.simclrv1.downstream.models import SimCLRv1DownStreamModel
+
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -64,6 +67,19 @@ def main(_):
     validloader = dataset.get_dataloader(
         valid_paths, valid_labels, dataloader_type="valid"
     )
+
+    # Download the model and load it.
+    model_path = download_model(FLAGS.model_artifact_path)
+    if wandb.run is not None:
+        artifact = run.use_artifact(FLAGS.model_artifact_path, type="model")
+    print("Path to the model checkpoint: ", model_path)
+
+    model = tf.keras.models.load_model(model_path)
+
+    # Build the model
+    tf.keras.backend.clear_session()
+    model = SimCLRv1DownStreamModel(config).get_model(model.backbone)
+    model.summary()
 
 if __name__ == "__main__":
     app.run(main)
