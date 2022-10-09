@@ -53,7 +53,7 @@ def get_model_configs() -> ml_collections.ConfigDict:
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.epochs = 50
+    configs.epochs = 1
     configs.temperature = 0.5
     configs.optimizer = "LAMB"
 

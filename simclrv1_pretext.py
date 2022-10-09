@@ -63,18 +63,19 @@ def main(_):
     # Model
     tf.keras.backend.clear_session()
     backbone = SimCLRv1Model(config).get_backbone()
-    backbone.summary()
+    # backbone.summary()
     projector = SimCLRv1Model(config).get_projector(
         input_dim=backbone.output.shape[-1],
         dim=config.model_config.projection_DIM,
         num_layers=config.model_config.projection_layers,
     )
-    projector.summary()
+    # projector.summary()
     contrastive_model = tfsim.models.ContrastiveModel(
         backbone=backbone,
         projector=projector,
         algorithm="simclr",
     )
+    contrastive_model.summary()
 
     # Initialize Model checkpointing callback
     callback_config = config.callback_config
@@ -84,10 +85,10 @@ def main(_):
         CALLBACKS += [model_checkpointer]
 
     # Build the pipeline
-    pipeline = SimCLRv1Pipeline(contrastive_model, config)
+    pipeline = SimCLRv1Pipeline(contrastive_model, config, CALLBACKS)
 
     # Train and Evaluate
-    pipeline.train_and_evaluate(inclass_paths, inclassloader, CALLBACKS)
+    pipeline.train_and_evaluate(inclass_paths, inclassloader)
 
 
 if __name__ == "__main__":
