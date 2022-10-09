@@ -4,6 +4,7 @@ import string
 from typing import Dict, List, Optional, Union
 
 import wandb
+import tensorflow as tf
 from tensorflow.keras import callbacks
 
 

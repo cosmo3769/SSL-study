@@ -19,6 +19,8 @@ def get_dataset_configs() -> ml_collections.ConfigDict:
     configs.batch_size = 64
     configs.num_classes = 200
     configs.shuffle_buffer = 1024
+    configs.apply_one_hot = True
+    configs.do_cache = False
 
     return configs
 
@@ -28,8 +30,9 @@ def get_augment_configs() -> ml_collections.ConfigDict:
     configs.image_height = 224  # default - 224
     configs.image_width = 224  # default - 224
     configs.crop_resize_area = (0.2, 1.0)
-    configs.alwaysapply = False
     configs.probability = 0.5
+    configs.use_augmentations = True
+    configs.alwaysapply = False
 
     return configs
 
@@ -53,9 +56,12 @@ def get_model_configs() -> ml_collections.ConfigDict:
 
 def get_train_configs() -> ml_collections.ConfigDict:
     configs = ml_collections.ConfigDict()
-    configs.epochs = 50
+    configs.epochs = 10
     configs.temperature = 0.5
-    configs.optimizer = "LAMB"
+    configs.optimizer = "sgd"
+    configs.sgd_momentum = 0.9
+    configs.loss = "categorical_crossentropy"
+    configs.val_steps_per_epoch = 20
 
     return configs
 
