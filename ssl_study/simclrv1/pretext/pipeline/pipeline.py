@@ -13,9 +13,10 @@ from tqdm import tqdm
 
 
 class SimCLRv1Pipeline:
-    def __init__(self, model, args):
+    def __init__(self, model, args, callbacks=[]):
         self.args = args
         self.model = model
+        self.callbacks = callbacks
 
     def train_and_evaluate(self, inclass_paths, inclassloader):
         # Optimizer
@@ -49,6 +50,7 @@ class SimCLRv1Pipeline:
             # validation_data=val_ds,
             # validation_steps=VAL_STEPS_PER_EPOCH,
             # callbacks=[evb, tbc, mcp],
+            callbacks=self.callbacks,
         )
 
         # # Evaluate

@@ -76,11 +76,18 @@ def main(_):
         algorithm="simclr",
     )
 
+    # Initialize Model checkpointing callback
+    callback_config = config.callback_config
+    if FLAGS.log_model:
+        # Custom W&B model checkpoint callback
+        model_checkpointer = callbacks.get_model_checkpoint_callback(config)
+        CALLBACKS += [model_checkpointer]
+
     # Build the pipeline
     pipeline = SimCLRv1Pipeline(contrastive_model, config)
 
     # Train and Evaluate
-    pipeline.train_and_evaluate(inclass_paths, inclassloader)
+    pipeline.train_and_evaluate(inclass_paths, inclassloader, CALLBACKS)
 
 
 if __name__ == "__main__":
