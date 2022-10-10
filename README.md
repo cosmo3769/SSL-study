@@ -55,7 +55,11 @@ To run a particular test: `python -m unittest tests/test_*.py`
 
 ### SimCLRv1 pretrain
 
-Run: `python simclrv1_pretext.py --config configs/simclrv1_pretext_config.py`
+Run: `python simclrv1_pretext.py --config configs/simclrv1_pretext_config.py --wandb --log_model`
+
+### SimCLRv1 train
+
+Run: `python simclrv1_downstream.py --config configs/simclrv1_downstream_config.py --model_artifact_path <path/to/model/artifact>`
 
 # Citations
 
