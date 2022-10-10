@@ -34,9 +34,8 @@ class GetDataloader:
             dataloader = dataloader.cache()
 
         # Add general stuff
-        dataloader = (
-            dataloader.batch(self.args.dataset_config.batch_size)
-            .prefetch(AUTOTUNE)
+        dataloader = dataloader.batch(self.args.dataset_config.batch_size).prefetch(
+            AUTOTUNE
         )
 
         return dataloader

@@ -56,7 +56,7 @@ def main(_):
     # Preprocess the DataFrames
     inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
     train_path = inclass_paths[2000:]
-    val_path = inclass_paths[0: 2000]
+    val_path = inclass_paths[0:2000]
 
     # Build dataloaders
     dataset = GetDataloader(config)

@@ -86,7 +86,7 @@ class GetDataloader:
         label = tf.cast(label, dtype=tf.int64)
         if self.args.dataset_config.apply_one_hot:
             label = tf.one_hot(label, depth=self.args.dataset_config.num_classes)
-            
+
         return image, label
 
     def build_augmentation(self):

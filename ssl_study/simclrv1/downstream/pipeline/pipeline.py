@@ -42,9 +42,11 @@ class SimCLRv1DownstreamPipeline:
             trainloader,
             batch_size=self.args.dataset_config.batch_size,
             epochs=self.args.train_config.epochs,
-            steps_per_epoch=int(len(train_paths) // self.args.dataset_config.batch_size),
+            steps_per_epoch=int(
+                len(train_paths) // self.args.dataset_config.batch_size
+            ),
             validation_data=validloader,
-            validation_steps=self.args.train_config.val_steps_per_epoch
+            validation_steps=self.args.train_config.val_steps_per_epoch,
         )
 
         # Evaluate

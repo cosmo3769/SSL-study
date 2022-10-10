@@ -18,10 +18,9 @@ from ssl_study import callbacks
 # Import modules
 from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.downstream.data import GetDataloader
-from ssl_study.simclrv1.downstream.models import download_model
-from ssl_study.simclrv1.downstream.models import SimCLRv1DownStreamModel
+from ssl_study.simclrv1.downstream.models import (SimCLRv1DownStreamModel,
+                                                  download_model)
 from ssl_study.simclrv1.downstream.pipeline import SimCLRv1DownstreamPipeline
-
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
@@ -91,6 +90,7 @@ def main(_):
 
     # Train and Evaluate
     pipeline.train_and_evaluate(train_paths, trainloader, validloader)
+
 
 if __name__ == "__main__":
     app.run(main)

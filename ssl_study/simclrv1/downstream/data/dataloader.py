@@ -1,7 +1,8 @@
+from functools import partial
+
 import numpy as np
 import tensorflow as tf
 import tensorflow_similarity as tfsim
-from functools import partial
 
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -38,12 +39,21 @@ class GetDataloader:
             dataloader = dataloader.cache()
 
         # Add augmentation to dataloader for training
-        if self.args.augmentation_config.use_augmentations and dataloader_type == "train":
-            dataloader = dataloader.map(lambda x, y: (self.eval_augmenter(x), y), tf.data.AUTOTUNE)
-            dataloader = dataloader.map(lambda x, y: (self.img_scaling(x), y), tf.data.AUTOTUNE)
-        else: 
-            dataloader = dataloader.map(lambda x, y: (self.img_scaling(tf.cast(x, dtype=tf.float32)), y), tf.data.AUTOTUNE)
-
+        if (
+            self.args.augmentation_config.use_augmentations
+            and dataloader_type == "train"
+        ):
+            dataloader = dataloader.map(
+                lambda x, y: (self.eval_augmenter(x), y), tf.data.AUTOTUNE
+            )
+            dataloader = dataloader.map(
+                lambda x, y: (self.img_scaling(x), y), tf.data.AUTOTUNE
+            )
+        else:
+            dataloader = dataloader.map(
+                lambda x, y: (self.img_scaling(tf.cast(x, dtype=tf.float32)), y),
+                tf.data.AUTOTUNE,
+            )
 
         # Add general stuff
         dataloader = dataloader.batch(self.args.dataset_config.batch_size).prefetch(
