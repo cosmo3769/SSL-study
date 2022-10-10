@@ -19,6 +19,7 @@ class GetDataloader:
 
         # Consume dataframe
         dataloader = tf.data.Dataset.from_tensor_slices(paths)
+        dataloader = dataloader.repeat()
 
         # Shuffle
         dataloader = dataloader.shuffle(self.args.dataset_config.shuffle_buffer)
