@@ -18,7 +18,7 @@ class SimCLRv1Pipeline:
         self.model = model
         self.callbacks = callbacks
 
-    def train_and_evaluate(self, inclass_paths, inclassloader):
+    def train_and_evaluate(self, inclass_paths, inclasstrainloader, inclassvalloader):
         # Optimizer
         if self.args.train_config.optimizer == "adam":
             optimizer = tf.keras.optimizers.Adam(self.args.lr_config.init_lr_rate)
@@ -44,11 +44,11 @@ class SimCLRv1Pipeline:
 
         # Train
         self.model.fit(
-            inclassloader,
+            inclasstrainloader,
             epochs=self.args.train_config.epochs,
             steps_per_epoch=len(inclass_paths) // self.args.dataset_config.batch_size,
-            # validation_data=val_ds,
-            # validation_steps=VAL_STEPS_PER_EPOCH,
+            validation_data=inclassvalloader,
+            validation_steps=self.args.train_config.val_steps_per_epoch,
             # callbacks=[evb, tbc, mcp],
             callbacks=self.callbacks,
         )

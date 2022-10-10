@@ -55,10 +55,13 @@ def main(_):
 
     # Preprocess the DataFrames
     inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
+    train_path = inclass_paths[2000:]
+    val_path = inclass_paths[0: 2000]
 
     # Build dataloaders
     dataset = GetDataloader(config)
-    inclassloader = dataset.get_dataloader(inclass_paths)
+    inclasstrainloader = dataset.get_dataloader(train_path)
+    inclassvalloader = dataset.get_dataloader(val_path)
 
     # Model
     tf.keras.backend.clear_session()
@@ -84,11 +87,14 @@ def main(_):
         model_checkpointer = callbacks.get_model_checkpoint_callback(config)
         CALLBACKS += [model_checkpointer]
 
+    if callback_config.use_tensorboard:
+        CALLBACKS += [tf.keras.callbacks.TensorBoard()]
+
     # Build the pipeline
     pipeline = SimCLRv1Pipeline(contrastive_model, config, CALLBACKS)
 
     # Train and Evaluate
-    pipeline.train_and_evaluate(inclass_paths, inclassloader)
+    pipeline.train_and_evaluate(inclass_paths, inclasstrainloader, inclassvalloader)
 
 
 if __name__ == "__main__":
