@@ -19,11 +19,13 @@ class GetDataloader:
 
         # Consume dataframe
         dataloader = tf.data.Dataset.from_tensor_slices(paths)
+        dataloader = dataloader.repeat()
+
+        # Shuffle
+        dataloader = dataloader.shuffle(self.args.dataset_config.shuffle_buffer)
 
         # Load the image
         dataloader = dataloader.map(self.parse_data, num_parallel_calls=AUTOTUNE)
-
-        print(dataloader)
 
         # augmented view(2 views of same example in a batch)
         dataloader = dataloader.map(self.process, num_parallel_calls=AUTOTUNE)
@@ -33,8 +35,7 @@ class GetDataloader:
 
         # Add general stuff
         dataloader = (
-            dataloader.shuffle(self.args.dataset_config.shuffle_buffer)
-            .batch(self.args.dataset_config.batch_size)
+            dataloader.batch(self.args.dataset_config.batch_size)
             .prefetch(AUTOTUNE)
         )
 
@@ -43,8 +44,8 @@ class GetDataloader:
     def parse_data(self, path):
         # Parse Image
         image_string = tf.io.read_file(path)
-        image = tf.image.decode_jpeg(image_string, channels=3)
-        image = tf.image.convert_image_dtype(image, dtype=tf.float32)
+        image = tf.io.decode_image(image_string, channels=3, expand_animations=False)
+        # image = tf.image.convert_image_dtype(image, dtype=tf.float32)
         if self.args.bool_config["apply_resize"]:
             image = tf.image.resize(
                 image,

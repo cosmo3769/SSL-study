@@ -55,32 +55,46 @@ def main(_):
 
     # Preprocess the DataFrames
     inclass_paths = preprocess_dataframe(inclass_df, is_labelled=False)
+    train_path = inclass_paths[2000:]
+    val_path = inclass_paths[0: 2000]
 
     # Build dataloaders
     dataset = GetDataloader(config)
-    inclassloader = dataset.get_dataloader(inclass_paths)
+    inclasstrainloader = dataset.get_dataloader(train_path)
+    inclassvalloader = dataset.get_dataloader(val_path)
 
     # Model
     tf.keras.backend.clear_session()
     backbone = SimCLRv1Model(config).get_backbone()
-    backbone.summary()
+    # backbone.summary()
     projector = SimCLRv1Model(config).get_projector(
         input_dim=backbone.output.shape[-1],
         dim=config.model_config.projection_DIM,
         num_layers=config.model_config.projection_layers,
     )
-    projector.summary()
+    # projector.summary()
     contrastive_model = tfsim.models.ContrastiveModel(
         backbone=backbone,
         projector=projector,
         algorithm="simclr",
     )
+    contrastive_model.summary()
+
+    # Initialize Model checkpointing callback
+    callback_config = config.callback_config
+    if FLAGS.log_model:
+        # Custom W&B model checkpoint callback
+        model_checkpointer = callbacks.get_model_checkpoint_callback(config)
+        CALLBACKS += [model_checkpointer]
+
+    if callback_config.use_tensorboard:
+        CALLBACKS += [tf.keras.callbacks.TensorBoard()]
 
     # Build the pipeline
-    pipeline = SimCLRv1Pipeline(contrastive_model, config)
+    pipeline = SimCLRv1Pipeline(contrastive_model, config, CALLBACKS)
 
     # Train and Evaluate
-    pipeline.train_and_evaluate(inclass_paths, inclassloader)
+    pipeline.train_and_evaluate(inclass_paths, inclasstrainloader, inclassvalloader)
 
 
 if __name__ == "__main__":

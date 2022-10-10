@@ -83,6 +83,9 @@ def download_dataset(
     if dataset_name == "train":
         data_df = data_df.sample(frac=1, random_state=42).reset_index(drop=True)
 
+    if dataset_name == "in-class":
+        data_df = data_df.sample(frac=1, random_state=42).reset_index(drop=True)
+
     # Save the dataframes as csv
     if dataset_name == "train" and not os.path.exists(save_at + "train.csv"):
         data_df.to_csv(save_at + "train.csv", index=False)
