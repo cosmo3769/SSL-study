@@ -22,6 +22,7 @@ class GetDataloader:
         """
         # Consume dataframe
         dataloader = tf.data.Dataset.from_tensor_slices((paths, labels))
+        dataloader = dataloader.repeat()
 
         # Shuffle if its for training
         if dataloader_type == "train":
