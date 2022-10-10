@@ -20,10 +20,15 @@ from ssl_study.data import download_dataset, preprocess_dataframe
 from ssl_study.simclrv1.downstream.data import GetDataloader
 from ssl_study.simclrv1.downstream.models import download_model
 from ssl_study.simclrv1.downstream.models import SimCLRv1DownStreamModel
+from ssl_study.simclrv1.downstream.pipeline import SimCLRv1DownstreamPipeline
 
 
 FLAGS = flags.FLAGS
 CONFIG = config_flags.DEFINE_config_file("config")
+flags.DEFINE_string(
+    "model_artifact_path", None, "Model checkpoint saved as W&B artifact."
+)
+flags.mark_flag_as_required("model_artifact_path")
 flags.DEFINE_bool("wandb", False, "MLOps pipeline for our classifier.")
 flags.DEFINE_bool("log_model", False, "Checkpoint model while training.")
 flags.DEFINE_bool(
@@ -74,12 +79,18 @@ def main(_):
         artifact = run.use_artifact(FLAGS.model_artifact_path, type="model")
     print("Path to the model checkpoint: ", model_path)
 
-    model = tf.keras.models.load_model(model_path)
+    model = tfsim.models.contrastive_model.load_model(model_path)
 
     # Build the model
     tf.keras.backend.clear_session()
     model = SimCLRv1DownStreamModel(config).get_model(model.backbone)
     model.summary()
+
+    # Build the pipeline
+    pipeline = SimCLRv1DownstreamPipeline(model, config, CALLBACKS)
+
+    # Train and Evaluate
+    pipeline.train_and_evaluate(train_paths, trainloader, validloader)
 
 if __name__ == "__main__":
     app.run(main)

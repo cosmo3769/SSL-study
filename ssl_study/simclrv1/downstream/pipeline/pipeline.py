@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 
 class SimCLRv1DownstreamPipeline:
-    def __init__(self, model, args, class_weights=None, callbacks=[]):
+    def __init__(self, model, args, callbacks=[]):
         self.args = args
         self.model = model
         self.callbacks = callbacks
