@@ -6,6 +6,7 @@ import glob
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_addons as tfa
 import tensorflow_similarity as tfsim
 import wandb
 from absl import app, flags
